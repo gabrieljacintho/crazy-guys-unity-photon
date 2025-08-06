@@ -11,11 +11,60 @@ Crazy Guys is a multiplayer party royale game developed for Photon Engine study 
 6. (Optional) Add the QuantumStats prefab (located in Assets/Photon/Quantum/Resources) to the game scene.
 
 # Room
-## How to create a room?
+## How to join or create a room?
+```
+private async Task ConnectToRoom(CancellationToken cancellationToken)
+{
+    var matchmakingArguments = new MatchmakingArguments
+    {
+        PhotonSettings = new AppSettings(PhotonServerSettings.Global.AppSettings),
+        RoomName = !string.IsNullOrEmpty(_roomNameInputField.text) ? _roomNameInputField.text : null,
+        PluginName = "QuantumPlugin",
+        MaxPlayers = Quantum.Input.MAX_COUNT,
+    };
 
-## How to join a room?
+    if (matchmakingArguments.AsyncConfig == null)
+    {
+        matchmakingArguments.AsyncConfig = AsyncConfig.Global;
+        matchmakingArguments.AsyncConfig.CancellationToken = cancellationToken;
+    }
+
+    _client = await MatchmakingExtensions.ConnectToRoomAsync(matchmakingArguments);
+    _client.CallbackMessage.Listen<MultiplayerPanel, OnDisconnectedMsg>(this, OnDisconnectedMessage);
+}
+```
 
 ## How to leave a room?
+```
+public async Task Disconnect()
+{
+    try
+    {
+        if (_cancellationTokenSource != null)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = null;
+        }
+
+        _statusText.text = "Disconnecting...";
+        _panelGroup.interactable = false;
+
+        if (_client != null)
+        {
+            _client.CallbackMessage.UnlistenAll(this);
+            _client = null;
+        }
+
+        await QuantumRunner.ShutdownAllAsync();
+    }
+    catch (Exception exception)
+    {
+        Debug.LogException(exception);
+    }
+
+    ReloadActiveScene();
+}
+```
 
 # Session
 ## How to create a lobby?
@@ -28,6 +77,13 @@ Crazy Guys is a multiplayer party royale game developed for Photon Engine study 
 
 # Player
 ## How to set player nickname?
+```
+private void SetPlayerNickname(string value)
+{
+    PlayerPrefs.SetString("player-name", value);
+    _runtimePlayer.PlayerNickname = value;
+}
+```
 
 ## How to spawn player character?
 
