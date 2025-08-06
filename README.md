@@ -7,6 +7,8 @@ Crazy Guys is a multiplayer party royale game developed for Photon Engine study 
 2. Import Photon Quantum SDK into Unity project
 3. Create a new App on Photon Engine Dashboard
 4. Register the App Id on Quantum SDK (Tools/Quantum/Quantum Hub/Installation)
+5. Add the following scripts to the game scene: QuantumEntityViewUpdater, QuantumMapData and QuantumRunnerLocalDebug (optional).
+6. (Optional) Add the QuantumStats prefab (located in Assets/Photon/Quantum/Resources) to the game scene.
 
 # Room
 ## How to create a room?
