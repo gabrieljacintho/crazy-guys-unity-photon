@@ -1,0 +1,31 @@
+// Pre-defining max number of players (default is 6, absolute max is 64)
+#pragma max_players 16
+
+component Player
+{
+	[ExcludeFromPrototype]
+	int CollectedCoinCount;
+}
+
+component PlayerLink
+{
+	PlayerRef PlayerRef;
+}
+
+signal PlayerFell(EntityRef entity);
+
+event Jumped
+{
+	EntityRef Entity;
+}
+
+event Landed
+{
+	EntityRef Entity;
+}
+
+event ResetLookRotation
+{
+	local PlayerRef LocalPlayer;
+	FPVector2 Look;
+}

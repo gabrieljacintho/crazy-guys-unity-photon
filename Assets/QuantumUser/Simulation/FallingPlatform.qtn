@@ -1,0 +1,14 @@
+component FallingPlatform
+{
+	[Tooltip("Time delay before platform starts falling")]
+	FP FallDelay;
+	[Tooltip("Time until platform resets to original position")]
+	FP ResetTime;
+
+	[ExcludeFromPrototype]
+	FPVector3 OriginalPosition;
+	[ExcludeFromPrototype]
+	FrameTimer FallTimer;
+	[ExcludeFromPrototype]
+	FrameTimer ResetTimer;
+}

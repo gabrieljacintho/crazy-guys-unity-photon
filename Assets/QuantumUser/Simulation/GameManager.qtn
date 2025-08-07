@@ -1,0 +1,16 @@
+singleton component GameManager
+{
+	[Tooltip("Minimum number of coins required to win the game")]
+	int MinCoinsToWin;
+	[Tooltip("Time to show the game result before new round starts")]
+	FP GameOverTime;
+	[Tooltip("Initial spawn position for players")]
+	FPVector3 SpawnPosition;
+	[Tooltip("Radius around spawn position where players can be placed")]
+	FP SpawnRadius;
+
+	[ExcludeFromPrototype]
+	PlayerRef Winner;
+	[ExcludeFromPrototype]
+	FrameTimer GameOverTimer;
+}

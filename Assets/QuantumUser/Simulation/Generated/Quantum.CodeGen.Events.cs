@@ -52,7 +52,7 @@ namespace Quantum {
   public unsafe partial class Frame {
     public unsafe partial struct FrameEvents {
       static partial void GetEventTypeCountCodeGen(ref Int32 eventCount) {
-        eventCount = 1;
+        eventCount = 5;
       }
       static partial void GetParentEventIDCodeGen(Int32 eventID, ref Int32 parentEventID) {
         switch (eventID) {
@@ -61,8 +61,143 @@ namespace Quantum {
       }
       static partial void GetEventTypeCodeGen(Int32 eventID, ref System.Type result) {
         switch (eventID) {
+          case EventCoinCollected.ID: result = typeof(EventCoinCollected); return;
+          case EventJumped.ID: result = typeof(EventJumped); return;
+          case EventLanded.ID: result = typeof(EventLanded); return;
+          case EventResetLookRotation.ID: result = typeof(EventResetLookRotation); return;
           default: break;
         }
+      }
+      public EventCoinCollected CoinCollected(EntityRef Entity, EntityRef Collector) {
+        var ev = _f.Context.AcquireEvent<EventCoinCollected>(EventCoinCollected.ID);
+        ev.Entity = Entity;
+        ev.Collector = Collector;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventJumped Jumped(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventJumped>(EventJumped.ID);
+        ev.Entity = Entity;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventLanded Landed(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventLanded>(EventLanded.ID);
+        ev.Entity = Entity;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventResetLookRotation ResetLookRotation(PlayerRef LocalPlayer, FPVector2 Look) {
+        if (_f.Context.IsLocalPlayer(LocalPlayer) == false) return null;
+        var ev = _f.Context.AcquireEvent<EventResetLookRotation>(EventResetLookRotation.ID);
+        ev.LocalPlayer = LocalPlayer;
+        ev.Look = Look;
+        _f.AddEvent(ev);
+        return ev;
+      }
+    }
+  }
+  public unsafe partial class EventCoinCollected : EventBase {
+    public new const Int32 ID = 1;
+    public EntityRef Entity;
+    public EntityRef Collector;
+    protected EventCoinCollected(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventCoinCollected() : 
+        base(1, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 41;
+        hash = hash * 31 + Entity.GetHashCode();
+        hash = hash * 31 + Collector.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventJumped : EventBase {
+    public new const Int32 ID = 2;
+    public EntityRef Entity;
+    protected EventJumped(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventJumped() : 
+        base(2, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 43;
+        hash = hash * 31 + Entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventLanded : EventBase {
+    public new const Int32 ID = 3;
+    public EntityRef Entity;
+    protected EventLanded(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventLanded() : 
+        base(3, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 47;
+        hash = hash * 31 + Entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventResetLookRotation : EventBase {
+    public new const Int32 ID = 4;
+    public PlayerRef LocalPlayer;
+    public FPVector2 Look;
+    protected EventResetLookRotation(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventResetLookRotation() : 
+        base(4, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 53;
+        hash = hash * 31 + LocalPlayer.GetHashCode();
+        hash = hash * 31 + Look.GetHashCode();
+        return hash;
       }
     }
   }

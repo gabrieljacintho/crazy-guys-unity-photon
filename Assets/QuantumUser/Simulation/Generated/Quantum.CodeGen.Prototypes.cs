@@ -50,12 +50,288 @@ namespace Quantum.Prototypes {
   #endif //;
   
   [System.SerializableAttribute()]
-  [Quantum.Prototypes.Prototype(typeof(Quantum.Input))]
-  public unsafe partial class InputPrototype : StructPrototype {
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Coin))]
+  public unsafe partial class CoinPrototype : ComponentPrototype<Quantum.Coin> {
+    [Tooltip("Time until coin respawns after being collected")]
+    public FP RefreshTime;
+    partial void MaterializeUser(Frame frame, ref Quantum.Coin result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Coin component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Coin result, in PrototypeMaterializationContext context = default) {
+        result.RefreshTime = this.RefreshTime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.FallingPlatform))]
+  public unsafe partial class FallingPlatformPrototype : ComponentPrototype<Quantum.FallingPlatform> {
+    [Tooltip("Time delay before platform starts falling")]
+    public FP FallDelay;
+    [Tooltip("Time until platform resets to original position")]
+    public FP ResetTime;
+    partial void MaterializeUser(Frame frame, ref Quantum.FallingPlatform result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.FallingPlatform component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.FallingPlatform result, in PrototypeMaterializationContext context = default) {
+        result.FallDelay = this.FallDelay;
+        result.ResetTime = this.ResetTime;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Flag))]
+  public unsafe partial class FlagPrototype : ComponentPrototype<Quantum.Flag> {
     [HideInInspector()]
     public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.Flag result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Flag component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Flag result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.GameManager))]
+  public unsafe partial class GameManagerPrototype : ComponentPrototype<Quantum.GameManager> {
+    [Tooltip("Minimum number of coins required to win the game")]
+    public Int32 MinCoinsToWin;
+    [Tooltip("Time to show the game result before new round starts")]
+    public FP GameOverTime;
+    [Tooltip("Initial spawn position for players")]
+    public FPVector3 SpawnPosition;
+    [Tooltip("Radius around spawn position where players can be placed")]
+    public FP SpawnRadius;
+    partial void MaterializeUser(Frame frame, ref Quantum.GameManager result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.GameManager component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.GameManager result, in PrototypeMaterializationContext context = default) {
+        result.MinCoinsToWin = this.MinCoinsToWin;
+        result.GameOverTime = this.GameOverTime;
+        result.SpawnPosition = this.SpawnPosition;
+        result.SpawnRadius = this.SpawnRadius;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Input))]
+  public unsafe partial class InputPrototype : StructPrototype {
+    public FPVector2 MoveDirection;
+    public FPVector2 LookRotation;
+    public Button Sprint;
+    public Button Jump;
     partial void MaterializeUser(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context = default) {
+        result.MoveDirection = this.MoveDirection;
+        result.LookRotation = this.LookRotation;
+        result.Sprint = this.Sprint;
+        result.Jump = this.Jump;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCC))]
+  public unsafe class KCCPrototype : ComponentPrototype<Quantum.KCC> {
+    public AssetRef<KCCSettings> Settings;
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.KCC component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.KCC result, in PrototypeMaterializationContext context = default) {
+        result.Settings = this.Settings;
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCCCollision))]
+  public unsafe class KCCCollisionPrototype : StructPrototype {
+    public Quantum.QEnum8<EKCCCollisionSource> Source;
+    public MapEntityId Reference;
+    public AssetRef Processor;
+    public void Materialize(Frame frame, ref Quantum.KCCCollision result, in PrototypeMaterializationContext context = default) {
+        result.Source = this.Source;
+        PrototypeValidator.FindMapEntity(this.Reference, in context, out result.Reference);
+        result.Processor = this.Processor;
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCCData))]
+  public unsafe partial class KCCDataPrototype : StructPrototype {
+    public QBoolean IsActive;
+    public FP LookPitch;
+    public FP LookYaw;
+    public FPVector3 BasePosition;
+    public FPVector3 DesiredPosition;
+    public FPVector3 TargetPosition;
+    public FP DeltaTime;
+    public FPVector3 InputDirection;
+    public FPVector3 JumpImpulse;
+    public FPVector3 Gravity;
+    public FP MaxGroundAngle;
+    public FP MaxWallAngle;
+    public FP MaxHangAngle;
+    public FPVector3 ExternalImpulse;
+    public FPVector3 ExternalForce;
+    public FPVector3 ExternalDelta;
+    public FP KinematicSpeed;
+    public FPVector3 KinematicTangent;
+    public FPVector3 KinematicDirection;
+    public FPVector3 KinematicVelocity;
+    public FPVector3 DynamicVelocity;
+    public FP RealSpeed;
+    public FPVector3 RealVelocity;
+    public QBoolean HasJumped;
+    public QBoolean HasTeleported;
+    public QBoolean IsGrounded;
+    public QBoolean WasGrounded;
+    public QBoolean IsSteppingUp;
+    public QBoolean WasSteppingUp;
+    public QBoolean IsSnappingToGround;
+    public QBoolean WasSnappingToGround;
+    public FPVector3 GroundNormal;
+    public FPVector3 GroundTangent;
+    public FPVector3 GroundPosition;
+    public FP GroundDistance;
+    public FP GroundAngle;
+    partial void MaterializeUser(Frame frame, ref Quantum.KCCData result, in PrototypeMaterializationContext context);
+    public void Materialize(Frame frame, ref Quantum.KCCData result, in PrototypeMaterializationContext context = default) {
+        result.IsActive = this.IsActive;
+        result.LookPitch = this.LookPitch;
+        result.LookYaw = this.LookYaw;
+        result.BasePosition = this.BasePosition;
+        result.DesiredPosition = this.DesiredPosition;
+        result.TargetPosition = this.TargetPosition;
+        result.DeltaTime = this.DeltaTime;
+        result.InputDirection = this.InputDirection;
+        result.JumpImpulse = this.JumpImpulse;
+        result.Gravity = this.Gravity;
+        result.MaxGroundAngle = this.MaxGroundAngle;
+        result.MaxWallAngle = this.MaxWallAngle;
+        result.MaxHangAngle = this.MaxHangAngle;
+        result.ExternalImpulse = this.ExternalImpulse;
+        result.ExternalForce = this.ExternalForce;
+        result.ExternalDelta = this.ExternalDelta;
+        result.KinematicSpeed = this.KinematicSpeed;
+        result.KinematicTangent = this.KinematicTangent;
+        result.KinematicDirection = this.KinematicDirection;
+        result.KinematicVelocity = this.KinematicVelocity;
+        result.DynamicVelocity = this.DynamicVelocity;
+        result.RealSpeed = this.RealSpeed;
+        result.RealVelocity = this.RealVelocity;
+        result.HasJumped = this.HasJumped;
+        result.HasTeleported = this.HasTeleported;
+        result.IsGrounded = this.IsGrounded;
+        result.WasGrounded = this.WasGrounded;
+        result.IsSteppingUp = this.IsSteppingUp;
+        result.WasSteppingUp = this.WasSteppingUp;
+        result.IsSnappingToGround = this.IsSnappingToGround;
+        result.WasSnappingToGround = this.WasSnappingToGround;
+        result.GroundNormal = this.GroundNormal;
+        result.GroundTangent = this.GroundTangent;
+        result.GroundPosition = this.GroundPosition;
+        result.GroundDistance = this.GroundDistance;
+        result.GroundAngle = this.GroundAngle;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCCIgnore))]
+  public unsafe class KCCIgnorePrototype : StructPrototype {
+    public Quantum.QEnum8<EKCCIgnoreSource> Source;
+    public MapEntityId Reference;
+    public void Materialize(Frame frame, ref Quantum.KCCIgnore result, in PrototypeMaterializationContext context = default) {
+        result.Source = this.Source;
+        PrototypeValidator.FindMapEntity(this.Reference, in context, out result.Reference);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCCModifier))]
+  public unsafe class KCCModifierPrototype : StructPrototype {
+    public AssetRef Processor;
+    public MapEntityId Entity;
+    public void Materialize(Frame frame, ref Quantum.KCCModifier result, in PrototypeMaterializationContext context = default) {
+        result.Processor = this.Processor;
+        PrototypeValidator.FindMapEntity(this.Entity, in context, out result.Entity);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.KCCProcessorLink))]
+  public unsafe partial class KCCProcessorLinkPrototype : ComponentPrototype<Quantum.KCCProcessorLink> {
+    public AssetRef<KCCProcessor> Processor;
+    partial void MaterializeUser(Frame frame, ref Quantum.KCCProcessorLink result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.KCCProcessorLink component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.KCCProcessorLink result, in PrototypeMaterializationContext context = default) {
+        result.Processor = this.Processor;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Movement))]
+  public unsafe partial class MovementPrototype : ComponentPrototype<Quantum.Movement> {
+    [Tooltip("Whether to update KCC look rotation based on player input (used for first person view)")]
+    public QBoolean SetLookRotation;
+    [Tooltip("Speed at which entity rotates")]
+    public FP RotationSpeed;
+    [Tooltip("Force applied when jumping")]
+    public FP JumpForce;
+    [Tooltip("Multiplier applied to base speed")]
+    public FP WalkSpeedMultiplier;
+    partial void MaterializeUser(Frame frame, ref Quantum.Movement result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Movement component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Movement result, in PrototypeMaterializationContext context = default) {
+        result.SetLookRotation = this.SetLookRotation;
+        result.RotationSpeed = this.RotationSpeed;
+        result.JumpForce = this.JumpForce;
+        result.WalkSpeedMultiplier = this.WalkSpeedMultiplier;
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Player))]
+  public unsafe partial class PlayerPrototype : ComponentPrototype<Quantum.Player> {
+    [HideInInspector()]
+    public Int32 _empty_prototype_dummy_field_;
+    partial void MaterializeUser(Frame frame, ref Quantum.Player result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Player component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Player result, in PrototypeMaterializationContext context = default) {
+        MaterializeUser(frame, ref result, in context);
+    }
+  }
+  [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.PlayerLink))]
+  public unsafe partial class PlayerLinkPrototype : ComponentPrototype<Quantum.PlayerLink> {
+    public PlayerRef PlayerRef;
+    partial void MaterializeUser(Frame frame, ref Quantum.PlayerLink result, in PrototypeMaterializationContext context);
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.PlayerLink component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.PlayerLink result, in PrototypeMaterializationContext context = default) {
+        result.PlayerRef = this.PlayerRef;
         MaterializeUser(frame, ref result, in context);
     }
   }

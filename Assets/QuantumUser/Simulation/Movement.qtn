@@ -1,0 +1,14 @@
+component Movement
+{
+	[Tooltip("Whether to update KCC look rotation based on player input (used for first person view)")]
+	bool SetLookRotation;
+	[Tooltip("Speed at which entity rotates")]
+	FP RotationSpeed;
+	[Tooltip("Force applied when jumping")]
+	FP JumpForce;
+	[Tooltip("Multiplier applied to base speed")]
+	FP WalkSpeedMultiplier;
+
+	[ExcludeFromPrototype]
+	bool JumpInProgress;
+}

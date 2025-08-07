@@ -1,0 +1,16 @@
+component Coin
+{
+	[Tooltip("Time until coin respawns after being collected")]
+	FP RefreshTime;
+
+	[ExcludeFromPrototype]
+	FrameTimer RefreshTimer;
+}
+
+signal CoinCollected(EntityRef entity);
+
+event CoinCollected
+{
+	EntityRef Entity;
+	EntityRef Collector;
+}

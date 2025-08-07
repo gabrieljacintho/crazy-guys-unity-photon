@@ -41,8 +41,36 @@ MonoBehaviour:
   Regions: []
   StaticColliders2D: []
   StaticColliders3D: []
-  MapEntities: []
+  MapEntities:
+  - Components:
+    - rid: 1279950011404124160
+    - rid: 1279950011404124161
   SerializedTriangleDataUncompressedSize: 8
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 1279950011404124160
+      type: {class: Transform2DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
+      data:
+        Position:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+        Rotation:
+          RawValue: 0
+    - rid: 1279950011404124161
+      type: {class: GameManagerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        MinCoinsToWin: 0
+        GameOverTime:
+          RawValue: 0
+        SpawnPosition:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+          Z:
+            RawValue: 0
+        SpawnRadius:
+          RawValue: 0
