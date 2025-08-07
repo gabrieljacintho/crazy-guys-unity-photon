@@ -16,6 +16,50 @@ Crazy Guys is a multiplayer party royale game developed for Photon Engine study 
 public class MultiplayerPanel : MonoBehaviour
 {
     private RealtimeClient _client;
+    private CancellationTokenSource _cancellationTokenSource;
+
+    private bool IsConnected => QuantumRunner.Default != null;
+
+    public async Task Connect()
+    {
+        try
+        {
+            if (_client != null)
+            {
+                await Disconnect();
+            }
+    
+            SetPlayerNickname(_nicknameInputField.text);
+    
+            _cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = _cancellationTokenSource.Token;
+    
+            var mode = _forceLocalMode && Application.isEditor ? DeterministicGameMode.Local : DeterministicGameMode.Multiplayer;
+    
+            if (mode == DeterministicGameMode.Multiplayer)
+            {
+                _statusText.text = "Connecting to a room...";
+                await ConnectToRoom(cancellationToken);
+            }
+    
+            _statusText.text = "Starting game session...";
+            var runner = (QuantumRunner)await StartSession(mode, cancellationToken);
+    
+            AddPlayer(runner);
+    
+            _statusText.text = string.Empty;
+            _panelGroup.gameObject.SetActive(false);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning(exception);
+            _statusText.text = $"Connection failed: {exception.Message}";
+    
+            await Disconnect();
+        }
+    
+        _cancellationTokenSource = null;
+    }
     
     private async Task ConnectToRoom(CancellationToken cancellationToken)
     {
@@ -34,6 +78,30 @@ public class MultiplayerPanel : MonoBehaviour
         }
     
         _client = await MatchmakingExtensions.ConnectToRoomAsync(matchmakingArguments);
+        _client.CallbackMessage.Listen<MultiplayerPanel, OnDisconnectedMsg>(this, OnDisconnectedMessage);
+    }
+    
+    private async Task<SessionRunner> StartSession(DeterministicGameMode mode, CancellationToken cancellationToken)
+    {
+        var sessionRunnerArguments = new SessionRunner.Arguments
+        {
+            RunnerFactory = QuantumRunnerUnityFactory.DefaultFactory,
+            GameParameters = QuantumRunnerUnityFactory.CreateGameParameters,
+            ClientId = _client?.UserId,
+            RuntimeConfig = _runtimeConfig,
+            SessionConfig = QuantumDeterministicSessionConfigAsset.DefaultConfig,
+            GameMode = mode,
+            PlayerCount = Quantum.Input.MAX_COUNT,
+            Communicator = _client != null ? new QuantumNetworkCommunicator(_client) : null,
+            CancellationToken = cancellationToken,
+        };
+    
+        return await SessionRunner.StartAsync(sessionRunnerArguments);
+    }
+    
+    private void AddPlayer(QuantumRunner runner)
+    {
+        runner.Game.AddPlayer(0, _runtimePlayer);
     }
 }
 ```
