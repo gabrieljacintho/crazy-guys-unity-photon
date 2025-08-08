@@ -12,3 +12,8 @@ component FallingPlatform
 	[ExcludeFromPrototype]
 	FrameTimer ResetTimer;
 }
+
+event PlatformFell
+{
+	EntityRef Entity;
+}

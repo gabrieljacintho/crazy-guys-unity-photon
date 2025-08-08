@@ -52,7 +52,7 @@ namespace Quantum {
   public unsafe partial class Frame {
     public unsafe partial struct FrameEvents {
       static partial void GetEventTypeCountCodeGen(ref Int32 eventCount) {
-        eventCount = 5;
+        eventCount = 6;
       }
       static partial void GetParentEventIDCodeGen(Int32 eventID, ref Int32 parentEventID) {
         switch (eventID) {
@@ -62,6 +62,7 @@ namespace Quantum {
       static partial void GetEventTypeCodeGen(Int32 eventID, ref System.Type result) {
         switch (eventID) {
           case EventCoinCollected.ID: result = typeof(EventCoinCollected); return;
+          case EventPlatformFell.ID: result = typeof(EventPlatformFell); return;
           case EventJumped.ID: result = typeof(EventJumped); return;
           case EventLanded.ID: result = typeof(EventLanded); return;
           case EventResetLookRotation.ID: result = typeof(EventResetLookRotation); return;
@@ -72,6 +73,12 @@ namespace Quantum {
         var ev = _f.Context.AcquireEvent<EventCoinCollected>(EventCoinCollected.ID);
         ev.Entity = Entity;
         ev.Collector = Collector;
+        _f.AddEvent(ev);
+        return ev;
+      }
+      public EventPlatformFell PlatformFell(EntityRef Entity) {
+        var ev = _f.Context.AcquireEvent<EventPlatformFell>(EventPlatformFell.ID);
+        ev.Entity = Entity;
         _f.AddEvent(ev);
         return ev;
       }
@@ -124,13 +131,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventJumped : EventBase {
+  public unsafe partial class EventPlatformFell : EventBase {
     public new const Int32 ID = 2;
     public EntityRef Entity;
-    protected EventJumped(Int32 id, EventFlags flags) : 
+    protected EventPlatformFell(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventJumped() : 
+    public EventPlatformFell() : 
         base(2, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -149,13 +156,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventLanded : EventBase {
+  public unsafe partial class EventJumped : EventBase {
     public new const Int32 ID = 3;
     public EntityRef Entity;
-    protected EventLanded(Int32 id, EventFlags flags) : 
+    protected EventJumped(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventLanded() : 
+    public EventJumped() : 
         base(3, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -174,14 +181,13 @@ namespace Quantum {
       }
     }
   }
-  public unsafe partial class EventResetLookRotation : EventBase {
+  public unsafe partial class EventLanded : EventBase {
     public new const Int32 ID = 4;
-    public PlayerRef LocalPlayer;
-    public FPVector2 Look;
-    protected EventResetLookRotation(Int32 id, EventFlags flags) : 
+    public EntityRef Entity;
+    protected EventLanded(Int32 id, EventFlags flags) : 
         base(id, flags) {
     }
-    public EventResetLookRotation() : 
+    public EventLanded() : 
         base(4, EventFlags.Server|EventFlags.Client) {
     }
     public new QuantumGame Game {
@@ -195,6 +201,32 @@ namespace Quantum {
     public override Int32 GetHashCode() {
       unchecked {
         var hash = 53;
+        hash = hash * 31 + Entity.GetHashCode();
+        return hash;
+      }
+    }
+  }
+  public unsafe partial class EventResetLookRotation : EventBase {
+    public new const Int32 ID = 5;
+    public PlayerRef LocalPlayer;
+    public FPVector2 Look;
+    protected EventResetLookRotation(Int32 id, EventFlags flags) : 
+        base(id, flags) {
+    }
+    public EventResetLookRotation() : 
+        base(5, EventFlags.Server|EventFlags.Client) {
+    }
+    public new QuantumGame Game {
+      get {
+        return (QuantumGame)base.Game;
+      }
+      set {
+        base.Game = value;
+      }
+    }
+    public override Int32 GetHashCode() {
+      unchecked {
+        var hash = 59;
         hash = hash * 31 + LocalPlayer.GetHashCode();
         hash = hash * 31 + Look.GetHashCode();
         return hash;

@@ -1,5 +1,4 @@
-﻿using System;
-using Photon.Deterministic;
+﻿using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
 using Input = UnityEngine.Input;
@@ -54,10 +53,10 @@ namespace GabrielBertasso
             var moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             _input.MoveDirection = moveDirection.normalized.ToFPVector2();
 
-            _input.Jump = Input.GetButton("Fire1");
+            _input.Jump = Input.GetButton("Jump");
             _input.Sprint = Input.GetButton("Sprint");
         }
-        
+
         private void PollInput(CallbackPollInput callback)
         {
             callback.SetInput(_input, DeterministicInputFlags.Repeatable);
