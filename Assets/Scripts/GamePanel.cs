@@ -58,7 +58,7 @@ namespace GabrielBertasso
         private void UpdateInstructionsText(GameManager gameManager, Player player)
         {
             int remainingCoinsCount = gameManager.MinCoinsToWin - player.CollectedCoinCount;
-            _instructionsText.text = remainingCoinsCount <= 0 ? "Run to the TOP!" : $"Collect {remainingCoinsCount} coins";
+            _instructionsText.text = remainingCoinsCount <= 0 ? "Run to the FLAG!" : $"Collect {remainingCoinsCount} coins";
         }
     }
 }
