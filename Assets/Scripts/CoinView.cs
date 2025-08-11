@@ -15,7 +15,7 @@ namespace GabrielBertasso
         {
             QuantumEvent.Subscribe<EventCoinCollected>(this, OnCoinCollected);
 
-            _visualRoot.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0f);
+            _visualRoot.transform.Rotate(0, Random.Range(0f, 360f), 0f, Space.World);
         }
 
         public override void OnUpdateView()
@@ -30,7 +30,7 @@ namespace GabrielBertasso
 
             if (isActive)
             {
-                _visualRoot.transform.Rotate(0f, _rotationSpeed * Time.deltaTime, 0f);
+                _visualRoot.transform.Rotate(0f, _rotationSpeed * Time.deltaTime, 0f, Space.World);
             }
         }
 

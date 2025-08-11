@@ -14,7 +14,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: 99c9f35b20de166458677d8052a53766
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 040d31f7a5515124c80e20755a4e4ffd
+    m_Address: Assets/Scenes/Game_Map.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 086e431e836081046bca4fe38f5a2cac
+    m_Address: Assets/QuantumAssets/PlayerKCCSettings.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17e19cba1219273418f28b997c8aa24c
+    m_Address: Assets/QuantumAssets/PlayerKCCGroundSnapProcessor.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 236212ea96c221640885ba89a5556433
+    m_Address: Assets/Prefabs/Player/PlayerEntityPrototype.qprototype
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 657de266c0b172d489db76122f92d9ed
+    m_Address: Assets/QuantumAssets/SystemsConfig.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 860fc308c6eda6c4297db12accedcd94
+    m_Address: Assets/QuantumAssets/PlayerKCCStepUpProcessor.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87456c7567ebae84fba84b2b5b945b8b
+    m_Address: Assets/Prefabs/Player/Player.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9890cab04f9333b42af0b05a429e16c6
+    m_Address: Assets/QuantumAssets/SimulationConfig.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a12c3e260001d094c80e65f1257dc014
+    m_Address: Assets/Scenes/Game.unity
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f126ed5d1217a33409d1c06ead9c3625
+    m_Address: Assets/Scenes/Game_Map_mesh.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f654f68c0bc68254881b4d24e7827234
+    m_Address: Assets/QuantumAssets/PlayerKCCEnvironmentProcessor.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 899eae8431df58b4eaa7a2eebe34979d, type: 2}
   m_SchemaSet:

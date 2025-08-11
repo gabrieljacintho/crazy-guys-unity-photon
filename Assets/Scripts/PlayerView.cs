@@ -68,13 +68,14 @@ namespace GabrielBertasso
 
         private void UpdateAnimator(KCC kcc)
         {
-            _animator.SetFloat(AnimatorId.MovementAmount, kcc.RealSpeed.AsFloat / kcc.Data.KinematicSpeed.AsFloat);
+            float movementAmount = kcc.IsActive ? kcc.RealSpeed.AsFloat / kcc.Data.KinematicSpeed.AsFloat : 0f;
+            _animator.SetFloat(AnimatorId.MovementAmount, movementAmount);
             _animator.SetBool(AnimatorId.IsGrounded, kcc.IsGrounded);
         }
 
         private void UpdateFootstepAudioSource(KCC kcc)
         {
-            _footstepAudioSource.enabled = kcc.IsGrounded && kcc.RealSpeed > 1;
+            _footstepAudioSource.enabled = kcc.IsActive && kcc.IsGrounded && kcc.RealSpeed > 1;
             _footstepAudioSource.pitch = kcc.RealSpeed > 6 ? 1.5f : 1f;
         }
 
@@ -86,7 +87,7 @@ namespace GabrielBertasso
         private void UpdateDustParticles(KCC kcc)
         {
             var emission = _dustParticles.emission;
-            emission.enabled = kcc.IsGrounded && kcc.RealSpeed > 1;
+            emission.enabled = kcc.IsActive && kcc.IsGrounded && kcc.RealSpeed > 1;
         }
 
         #endregion
