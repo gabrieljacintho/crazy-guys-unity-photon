@@ -23,8 +23,8 @@ namespace GabrielBertasso
                 return;
             }
 
-            QuantumCallback.Subscribe(this, (CallbackPollInput callback) => PollInput(callback));
-            QuantumEvent.Subscribe<EventResetLookRotation>(this, OnResetLookRotation);
+            QuantumCallback.Subscribe(this, (CallbackPollInput callback) => PollInput(callback), (DispatchableFilter)null, false, true);
+            QuantumEvent.Subscribe<EventResetLookRotation>(this, OnResetLookRotation, (DispatchableFilter)null, false, true);
         }
 
         public override void OnUpdateView()

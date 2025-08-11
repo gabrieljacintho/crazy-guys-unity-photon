@@ -13,7 +13,7 @@ namespace GabrielBertasso
 
         public override void OnActivate(Frame frame)
         {
-            QuantumEvent.Subscribe<EventCoinCollected>(this, OnCoinCollected);
+            QuantumEvent.Subscribe<EventCoinCollected>(this, OnCoinCollected, (DispatchableFilter)null, false, true);
 
             _visualRoot.transform.Rotate(0, Random.Range(0f, 360f), 0f, Space.World);
         }

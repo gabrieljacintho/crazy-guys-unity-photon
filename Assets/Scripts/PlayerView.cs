@@ -27,8 +27,8 @@ namespace GabrielBertasso
 
         public override void OnActivate(Frame frame)
         {
-            QuantumEvent.Subscribe<EventJumped>(this, OnJumped);
-            QuantumEvent.Subscribe<EventLanded>(this, OnLanded);
+            QuantumEvent.Subscribe<EventJumped>(this, OnJumped, (DispatchableFilter)null, false, true);
+            QuantumEvent.Subscribe<EventLanded>(this, OnLanded, (DispatchableFilter)null, false, true);
 
             var playerLink = GetPredictedQuantumComponent<PlayerLink>();
             if (Game.PlayerIsLocal(playerLink.PlayerRef))

@@ -10,7 +10,7 @@ namespace GabrielBertasso
 
         public override void OnActivate(Frame frame)
         {
-            QuantumEvent.Subscribe<EventPlatformFell>(this, OnPlatformFell);
+            QuantumEvent.Subscribe<EventPlatformFell>(this, OnPlatformFell, (DispatchableFilter)null, false, true);
         }
 
         private void OnPlatformFell(EventPlatformFell callback)
