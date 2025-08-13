@@ -13,6 +13,11 @@ namespace GabrielBertasso
             QuantumEvent.Subscribe<EventPlatformFell>(this, OnPlatformFell, (DispatchableFilter)null, false, true);
         }
 
+        public override void OnDeactivate()
+        {
+            QuantumCallback.UnsubscribeListener(this);
+        }
+
         private void OnPlatformFell(EventPlatformFell callback)
         {
             if (callback.Entity != EntityRef)

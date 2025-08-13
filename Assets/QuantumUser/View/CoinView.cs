@@ -18,6 +18,11 @@ namespace GabrielBertasso
             _visualRoot.transform.Rotate(0, Random.Range(0f, 360f), 0f, Space.World);
         }
 
+        public override void OnDeactivate()
+        {
+            QuantumCallback.UnsubscribeListener(this);
+        }
+
         public override void OnUpdateView()
         {
             var coin = GetPredictedQuantumComponent<Coin>();

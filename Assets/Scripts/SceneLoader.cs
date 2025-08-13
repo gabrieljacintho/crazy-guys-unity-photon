@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace GabrielBertasso
@@ -10,12 +11,14 @@ namespace GabrielBertasso
 
         private void Start()
         {
-            Load();
+            StartCoroutine(Load());
         }
 
-        public void Load()
+        public IEnumerator Load()
         {
-            Addressables.LoadSceneAsync(_scene);
+            var handle = Addressables.LoadSceneAsync(_scene);
+            yield return handle;
+            Debug.Log("Scene loaded.");
         }
     }
 }

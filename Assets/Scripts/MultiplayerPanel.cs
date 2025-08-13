@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Photon.Deterministic;
@@ -23,8 +25,8 @@ namespace GabrielBertasso
 
         [Header("UI Elements")]
         [SerializeField] private CanvasGroup _panelGroup;
-        [SerializeField] private GameObject _connectGroup;
-        [SerializeField] private GameObject _disconnectGroup;
+        [SerializeField] private CanvasGroup _connectGroup;
+        [SerializeField] private CanvasGroup _disconnectGroup;
         [SerializeField] private TMP_InputField _nicknameInputField;
         [SerializeField] private TMP_InputField _roomNameInputField;
         [SerializeField] private TextMeshProUGUI _statusText;
@@ -37,18 +39,11 @@ namespace GabrielBertasso
         private bool IsConnected => QuantumRunner.Default != null;
 
 
-        private void OnEnable()
+        private async void OnEnable()
         {
-            var nickname = PlayerPrefs.GetString("player-name");
-            if (string.IsNullOrEmpty(nickname))
-            {
-                nickname = "Player" + Guid.NewGuid().ToString();
-            }
-
-            _nicknameInputField.text = nickname;
-
-            _statusText.text = !string.IsNullOrEmpty(s_shutdownStatus) ? s_shutdownStatus : string.Empty;
-            s_shutdownStatus = string.Empty;
+            LoadNicknameText();
+            await PreloadAllAssets();
+            LoadStatusText();
         }
 
         private void Update()
@@ -64,8 +59,8 @@ namespace GabrielBertasso
             if (_panelGroup.gameObject.activeSelf)
             {
                 bool isConnectingOrConnected = _cancellationTokenSource != null || IsConnected;
-                _connectGroup.SetActive(!isConnectingOrConnected);
-                _disconnectGroup.SetActive(isConnectingOrConnected);
+                _connectGroup.gameObject.SetActive(!isConnectingOrConnected);
+                _disconnectGroup.gameObject.SetActive(isConnectingOrConnected);
                 _nicknameInputField.interactable = !isConnectingOrConnected;
                 _roomNameInputField.interactable = !isConnectingOrConnected;
 
@@ -95,26 +90,29 @@ namespace GabrielBertasso
                 _cancellationTokenSource = new CancellationTokenSource();
                 var cancellationToken = _cancellationTokenSource.Token;
 
+                // Force local mode in editor for faster testing
                 var mode = _forceLocalMode && Application.isEditor ? DeterministicGameMode.Local : DeterministicGameMode.Multiplayer;
 
                 if (mode == DeterministicGameMode.Multiplayer)
                 {
                     _statusText.text = "Connecting to a room...";
-                    await ConnectToRoom(cancellationToken);
+
+                    _client = await ConnectToRoom(cancellationToken);
+                    _client.CallbackMessage.Listen<MultiplayerPanel, OnDisconnectedMsg>(this, OnDisconnectedMessage);
                 }
 
                 _statusText.text = "Starting game session...";
-                var runner = (QuantumRunner)await StartSession(mode, cancellationToken);
 
-                AddPlayer(runner);
+                var runner = (QuantumRunner)await StartSession(mode, cancellationToken);
+                runner.Game.AddPlayer(0, _runtimePlayer);
 
                 _statusText.text = string.Empty;
                 _panelGroup.gameObject.SetActive(false);
             }
             catch (Exception exception)
             {
+                s_shutdownStatus = $"Connection failed: {exception.Message}";
                 Debug.LogWarning(exception);
-                _statusText.text = $"Connection failed: {exception.Message}";
 
                 await Disconnect();
             }
@@ -133,7 +131,7 @@ namespace GabrielBertasso
             _runtimePlayer.PlayerNickname = value;
         }
 
-        private async Task ConnectToRoom(CancellationToken cancellationToken)
+        private async Task<RealtimeClient> ConnectToRoom(CancellationToken cancellationToken)
         {
             var matchmakingArguments = new MatchmakingArguments
             {
@@ -149,8 +147,7 @@ namespace GabrielBertasso
                 matchmakingArguments.AsyncConfig.CancellationToken = cancellationToken;
             }
 
-            _client = await MatchmakingExtensions.ConnectToRoomAsync(matchmakingArguments);
-            _client.CallbackMessage.Listen<MultiplayerPanel, OnDisconnectedMsg>(this, OnDisconnectedMessage);
+            return await MatchmakingExtensions.ConnectToRoomAsync(matchmakingArguments);
         }
 
         private async Task<SessionRunner> StartSession(DeterministicGameMode mode, CancellationToken cancellationToken)
@@ -169,11 +166,6 @@ namespace GabrielBertasso
             };
 
             return await SessionRunner.StartAsync(sessionRunnerArguments);
-        }
-
-        private void AddPlayer(QuantumRunner runner)
-        {
-            runner.Game.AddPlayer(0, _runtimePlayer);
         }
 
         #endregion
@@ -203,15 +195,68 @@ namespace GabrielBertasso
             }
             catch (Exception exception)
             {
+                s_shutdownStatus = $"Disconnection failed: {exception.Message}";
                 Debug.LogException(exception);
             }
 
-            ReloadActiveScene();
+            StartCoroutine(ReloadActiveScene());
         }
 
         public async void InvokeDisconnect()
         {
             await Disconnect();
+        }
+
+        #endregion
+
+        #region Load
+
+        private void LoadNicknameText()
+        {
+            var nickname = PlayerPrefs.GetString("player-name");
+            if (string.IsNullOrEmpty(nickname))
+            {
+                nickname = "Player" + Guid.NewGuid().ToString();
+            }
+
+            _nicknameInputField.text = nickname;
+        }
+
+        private void LoadStatusText()
+        {
+            _statusText.text = !string.IsNullOrEmpty(s_shutdownStatus) ? s_shutdownStatus : string.Empty;
+            s_shutdownStatus = string.Empty;
+        }
+
+        private async Task PreloadAllAssets()
+        {
+            _statusText.text = "Preloading assets...";
+            _connectGroup.interactable = false;
+
+            var addressableAssets = QuantumUnityDB.Global.Entries
+                .Where(x => x.Source is QuantumAssetObjectSourceAddressable)
+                .Select(x => (x.Guid, ((QuantumAssetObjectSourceAddressable)x.Source).RuntimeKey));
+
+            // preload all the addressable assets
+            foreach (var (assetRef, address) in addressableAssets)
+            {
+                // there are a few ways to load an asset with Addressables (by label, by IResourceLocation, by address etc.)
+                // but it seems that they're not fully interchangeable, i.e. loading by label will not make loading by address
+                // be reported as done immediately; hence the only way to preload an asset for Quantum is to replicate
+                // what it does internally, i.e. load with the very same parameters
+                await Addressables.LoadAssetAsync<UnityEngine.Object>(address).Task;
+            }
+
+            _statusText.text = string.Empty;
+            _connectGroup.interactable = true;
+        }
+
+        private IEnumerator ReloadActiveScene()
+        {
+            _panelGroup.gameObject.SetActive(false);
+            var handle = Addressables.LoadSceneAsync(_scene);
+            yield return handle;
+            Debug.Log("Scene reloaded.");
         }
 
         #endregion
@@ -226,13 +271,7 @@ namespace GabrielBertasso
             s_shutdownStatus = $"Shutdown: {message.cause}";
             Debug.LogWarning(s_shutdownStatus);
 
-            ReloadActiveScene();
-        }
-
-        private void ReloadActiveScene()
-        {
-            _panelGroup.gameObject.SetActive(false);
-            Addressables.LoadSceneAsync(_scene);
+            StartCoroutine(ReloadActiveScene());
         }
     }
 }

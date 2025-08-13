@@ -45,6 +45,11 @@ namespace GabrielBertasso
             _cameraTransform = Camera.main.transform;
         }
 
+        public override void OnDeactivate()
+        {
+            QuantumCallback.UnsubscribeListener(this);
+        }
+
         public override void OnUpdateView()
         {
             var kcc = GetPredictedQuantumComponent<KCC>();

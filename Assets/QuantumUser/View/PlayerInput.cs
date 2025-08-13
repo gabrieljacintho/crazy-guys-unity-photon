@@ -27,6 +27,11 @@ namespace GabrielBertasso
             QuantumEvent.Subscribe<EventResetLookRotation>(this, OnResetLookRotation, (DispatchableFilter)null, false, true);
         }
 
+        public override void OnDeactivate()
+        {
+            QuantumCallback.UnsubscribeListener(this);
+        }
+
         public override void OnUpdateView()
         {
             if (Cursor.lockState != CursorLockMode.Locked)

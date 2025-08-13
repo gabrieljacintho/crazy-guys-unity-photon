@@ -18,112 +18,170 @@ MonoBehaviour:
   - m_GUID: 0406db5a14f94604a8c57ccfbc9f3b46
     m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesUnlit.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 040d31f7a5515124c80e20755a4e4ffd
     m_Address: Assets/Scenes/Game_Map.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 086e431e836081046bca4fe38f5a2cac
     m_Address: Assets/QuantumAssets/PlayerKCCSettings.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 156ece8b25f320d4db9e59ea3be2dab1
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPAcos.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 17e19cba1219273418f28b997c8aa24c
     m_Address: Assets/QuantumAssets/PlayerKCCGroundSnapProcessor.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 22fbab28c005bb04ebdb225e884ca122
     m_Address: Assets/Art/Materials/Particle.mat
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 236212ea96c221640885ba89a5556433
     m_Address: Assets/Prefabs/Player/PlayerEntityPrototype.qprototype
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 36e335017ad71d54fbb10842863188ae
     m_Address: Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/FallbackShader.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 41591ee84c509c04280d36953a307d4f
     m_Address: Assets/Art/Fonts/Jersey_10/Jersey10-Regular SDF.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 657de266c0b172d489db76122f92d9ed
     m_Address: Assets/QuantumAssets/SystemsConfig.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68e6db2ebdc24f95958faec2be5558d6
     m_Address: Assets/TextMesh Pro/Shaders/TMP_SDF.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 794c9b9f73b140340899f43d5f7dd28e
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPTan.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8516d7a69675844a7a0b7095af7c46af
     m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLit.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 860fc308c6eda6c4297db12accedcd94
     m_Address: Assets/QuantumAssets/PlayerKCCStepUpProcessor.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 87456c7567ebae84fba84b2b5b945b8b
     m_Address: Assets/Prefabs/Player/Player.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 901eae5da0650314db37f0d7634d824a
     m_Address: Assets/Art/Fonts/Jersey_10/Jersey10-Regular.ttf
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 933532a4fcc9baf4fa0491de14d08ed7
     m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 957e874da6f980e47ba1b834471301ce
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPSinCos.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9890cab04f9333b42af0b05a429e16c6
     m_Address: Assets/QuantumAssets/SimulationConfig.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a12c3e260001d094c80e65f1257dc014
     m_Address: Assets/Scenes/Game.unity
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af1ed011e3558e74b98a67eaac497930
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPAtan.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b555f92ed5573da42a2a05b62fa48234
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPSqrt.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b7839dad95683814aa64166edc107ae2
     m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesLit.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e6e9a19c3678ded42a3bc431ebef7dbd
     m_Address: Packages/com.unity.render-pipelines.universal/Shaders/Utils/FallbackError.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f126ed5d1217a33409d1c06ead9c3625
     m_Address: Assets/Scenes/Game_Map_mesh.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f191f1cbd1535994facad2b5403dff75
+    m_Address: Assets/Photon/Quantum/Runtime/RuntimeAssets/LUT/FPAsin.bytes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f654f68c0bc68254881b4d24e7827234
     m_Address: Assets/QuantumAssets/PlayerKCCEnvironmentProcessor.asset
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fe393ace9b354375a9cb14cdbbc28be4
     m_Address: Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 899eae8431df58b4eaa7a2eebe34979d, type: 2}
