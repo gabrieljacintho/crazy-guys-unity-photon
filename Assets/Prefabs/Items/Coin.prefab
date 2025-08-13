@@ -331,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Prototype:
     RefreshTime:
-      RawValue: 196608
+      RawValue: 327680
 --- !u!1 &7290916700339789563
 GameObject:
   m_ObjectHideFlags: 0
