@@ -615,7 +615,7 @@ MonoBehaviour:
       MutableMode: 0
   MapEntities:
   - Components:
-    - rid: 1279950011404124160
+    - rid: 5963585150175412224
   - Components:
     - rid: 4598615649114128384
     - rid: 4598615649114128385
@@ -1368,21 +1368,6 @@ MonoBehaviour:
       data:
         RefreshTime:
           RawValue: 327680
-    - rid: 1279950011404124160
-      type: {class: GameManagerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
-      data:
-        MinCoinsToWin: 10
-        GameOverTime:
-          RawValue: 327680
-        SpawnPosition:
-          X:
-            RawValue: 0
-          Y:
-            RawValue: 0
-          Z:
-            RawValue: 0
-        SpawnRadius:
-          RawValue: 131072
     - rid: 1373827894731603968
       type: {class: Transform3DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
@@ -2804,6 +2789,21 @@ MonoBehaviour:
       data:
         RefreshTime:
           RawValue: 327680
+    - rid: 5963585150175412224
+      type: {class: GameManagerPrototype, ns: Quantum.Prototypes, asm: Quantum.Simulation}
+      data:
+        MinCoinsToWin: 10
+        GameOverTime:
+          RawValue: 327680
+        SpawnPosition:
+          X:
+            RawValue: 0
+          Y:
+            RawValue: 0
+          Z:
+            RawValue: 0
+        SpawnRadius:
+          RawValue: 131072
     - rid: 6179691422573133824
       type: {class: Transform3DPrototype, ns: Quantum.Prototypes, asm: Quantum.Engine}
       data:
