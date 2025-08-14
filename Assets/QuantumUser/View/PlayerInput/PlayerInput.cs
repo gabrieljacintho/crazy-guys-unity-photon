@@ -1,11 +1,10 @@
 ﻿using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
-using Input = UnityEngine.Input;
 
 namespace GabrielBertasso
 {
-    public class PlayerInput : QuantumEntityViewComponent
+    public abstract class PlayerInput : QuantumEntityViewComponent
     {
         [SerializeField] private FPVector2 _pitchClamp = new FPVector2(-30, 70);
 
@@ -40,27 +39,23 @@ namespace GabrielBertasso
                 return;
             }
 
-            var lookRotationDelta = new Vector2(-Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X"));
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-            if (Mathf.Abs(lookRotationDelta.x) > 45 || Mathf.Abs(lookRotationDelta.y) > 45)
-            {
-                // Prevent glitch in Chrome with high polling mice where cursor jumps rapidly from time to time
-                lookRotationDelta = default;
-            }
-
-            // Sensitivity in WebGL builds on desktop is much higher for some reason, decrease it
-            lookRotationDelta *= 0.5f;
-#endif
-
-            _input.LookRotation = ClampLookRotation(_input.LookRotation + lookRotationDelta.ToFPVector2());
-
-            var moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            _input.MoveDirection = moveDirection.normalized.ToFPVector2();
-
-            _input.Jump = Input.GetButton("Jump");
-            _input.Sprint = Input.GetButton("Sprint");
+            _input.LookRotation = ClampLookRotation(_input.LookRotation + GetLookRotationDelta().ToFPVector2());
+            _input.MoveDirection = Vector2.ClampMagnitude(GetMoveDirection(), 1f).ToFPVector2();
+            _input.Jump = CanJump();
+            _input.Sprint = CanSprint();
         }
+
+        #region Inputs
+
+        protected abstract Vector2 GetLookRotationDelta();
+
+        protected abstract Vector2 GetMoveDirection();
+
+        protected abstract bool CanJump();
+
+        protected abstract bool CanSprint();
+
+        #endregion
 
         private void PollInput(CallbackPollInput callback)
         {

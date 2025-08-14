@@ -6,7 +6,7 @@ namespace GabrielBertasso
 {
     public class PlayerView : QuantumEntityViewComponent<SceneContext>
     {
-        [SerializeField] private PlayerInput _input;
+        [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private Animator _animator;
         [SerializeField] private Transform _cameraPivot;
         [SerializeField] private Transform _cameraHandle;
@@ -99,7 +99,7 @@ namespace GabrielBertasso
 
         private void UpdateCamera()
         {
-            _cameraPivot.rotation = Quaternion.Euler(_input.LookRotation);
+            _cameraPivot.rotation = Quaternion.Euler(_playerInput.LookRotation);
             _cameraTransform.SetPositionAndRotation(_cameraHandle.position, _cameraHandle.rotation);
         }
 
