@@ -3,12 +3,14 @@ using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GabrielBertasso.Helpers;
 using Photon.Deterministic;
 using Photon.Realtime;
 using Quantum;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.InputSystem;
 using Input = UnityEngine.Input;
 
 namespace GabrielBertasso
@@ -18,6 +20,7 @@ namespace GabrielBertasso
         [SerializeField] private RuntimeConfig _runtimeConfig;
         [SerializeField] private RuntimePlayer _runtimePlayer;
         [SerializeField] private AssetReferenceScene _scene;
+        [SerializeField] private InputActionReference _pauseInput;
 
         [Header("Debug")]
         [Tooltip("For debug purposes it is possible to force single-player game (starts faster)")]
@@ -50,7 +53,7 @@ namespace GabrielBertasso
         {
             if (IsConnected)
             {
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape))
+                if (_pauseInput.action.WasPressedThisFrame())
                 {
                     TogglePanelVisibility();
                 }
@@ -64,13 +67,11 @@ namespace GabrielBertasso
                 _nicknameInputField.interactable = !isConnectingOrConnected;
                 _roomNameInputField.interactable = !isConnectingOrConnected;
 
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                SetCursorVisible(true);
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                SetCursorVisible(false);
             }
         }
 
@@ -264,6 +265,15 @@ namespace GabrielBertasso
         private void TogglePanelVisibility()
         {
             _panelGroup.gameObject.SetActive(!_panelGroup.gameObject.activeSelf);
+        }
+
+        private void SetCursorVisible(bool value)
+        {
+            if (!SymbolsHelper.IsInMobilePlatform())
+            {
+                Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
+                Cursor.visible = value;
+            }
         }
 
         private void OnDisconnectedMessage(OnDisconnectedMsg message)

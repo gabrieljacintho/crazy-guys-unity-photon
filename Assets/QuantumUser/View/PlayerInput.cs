@@ -1,55 +1,70 @@
-﻿using Photon.Deterministic;
+﻿using GabrielBertasso.Helpers;
+using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
-using Input = UnityEngine.Input;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace GabrielBertasso
 {
     public class PlayerInput : QuantumEntityViewComponent
     {
         [SerializeField] private FPVector2 _pitchClamp = new FPVector2(-30, 70);
-#if UNITY_ANDROID || UNITY_IOS
-        [Header("Inputs")]
-        [SerializeField] private RectTransform _moveInitialTransform;
-        [SerializeField] private RectTransform _moveCurrentTransform;
-        [SerializeField] private Vector2 _canvasSize = new Vector2(1920, 1080);
-        [SerializeField] private float _moveMaxRadius = 20f;
+        [SerializeField] private FP _lookSensitivity = FP._0_20;
+
+#if UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR
+        [Header("Keyboard, Mouse and Gamepad")]
+        [SerializeField] private InputActionReference _lookInput;
+        [SerializeField] private InputActionReference _moveInput;
+        [SerializeField] private InputActionReference _jumpInput;
+        [SerializeField] private InputActionReference _sprintInput;
+#endif
+#if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
+        [Header("Touch")]
+        [SerializeField] private GameObject _touchInputContent;
+        [SerializeField] private RectTransform _touchMoveInitialTransform;
+        [SerializeField] private RectTransform _touchMoveCurrentTransform;
+
+        private Vector2 _screenResolution;
+        private Vector2 _canvasResolution;
+        private float _touchMoveCurrentTransformMaxRadius;
 
         private Vector2 _lookRotationDelta;
         private Vector2 _moveDirection;
-        private Vector2 _resolution;
+        private Vector2 _lastLookTouchCanvasPosition;
 
         public bool IsJumpButtonPressed { get; set; }
         private bool IsSprintButtonPressed { get; set; }
-#else
-        [Header("Inputs")]
-        [SerializeField] private string _lookXAxisName = "Mouse X";
-        [SerializeField] private string _lookYAxisName = "Mouse Y";
-        [SerializeField] private string _moveXAxisName = "Horizontal";
-        [SerializeField] private string _moveYAxisName = "Vertical";
-        [SerializeField] private string _jumpButtonName = "Jump";
-        [SerializeField] private string _sprintButtonName = "Sprint";
 #endif
         private Quantum.Input _input;
 
         public Vector2 LookRotation => _input.LookRotation.ToUnityVector2();
 
 #if UNITY_ANDROID || UNITY_IOS
+        private void Awake()
+        {
+            _touchInputContent.SetActive(true);
+            _screenResolution = new Vector2(Screen.width, Screen.height);
+            _canvasResolution = _touchInputContent.GetComponentInChildren<CanvasScaler>().referenceResolution;
+            _touchMoveCurrentTransformMaxRadius = _touchMoveInitialTransform.rect.width / 2f;
+            EnhancedTouchSupport.Enable();
+        }
+
         private void Update()
         {
             ResetMoveDirection();
-            if (Input.touchCount == 0)
+
+            foreach (var finger in Touch.activeFingers)
             {
-                return;
-            }
+                Touch touch = finger.currentTouch;
+                if (!touch.isInProgress)
+                {
+                    continue;
+                }
 
-            _resolution = new Vector2(Screen.width, Screen.height);
-
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                Touch touch = Input.GetTouch(i);
-
-                if (IsTouchingMoveButton(touch))
+                if (WasTouchingMoveButton(touch))
                 {
                     UpdateMoveDirection(touch);
                 }
@@ -80,7 +95,7 @@ namespace GabrielBertasso
 
         public override void OnUpdateView()
         {
-            if (Cursor.lockState != CursorLockMode.Locked)
+            if (!SymbolsHelper.IsInMobilePlatform() && Cursor.lockState != CursorLockMode.Locked)
             {
                 _input.MoveDirection = default;
                 return;
@@ -97,10 +112,10 @@ namespace GabrielBertasso
         private Vector2 GetLookRotationDelta()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            return _lookRotationDelta;
+            return _lookRotationDelta * _lookSensitivity.AsFloat;
 #else
-            Vector2 value = new Vector2(-Input.GetAxisRaw(_lookYAxisName), Input.GetAxisRaw(_lookXAxisName));
-    #if !UNITY_EDITOR
+            Vector2 value = new Vector2(-Input.GetAxisRaw(_lookYAxisName), Input.GetAxisRaw(_lookXAxisName)) * _lookSensitivity.AsFloat;
+#if !UNITY_EDITOR
             if (Mathf.Abs(value.x) > 45 || Mathf.Abs(value.y) > 45)
             {
                 // Prevent glitch in Chrome with high polling mice where cursor jumps rapidly from time to time
@@ -109,9 +124,9 @@ namespace GabrielBertasso
 
             // Sensitivity in WebGL builds on desktop is much higher for some reason, decrease it
             value *= 0.5f;
-    #endif
 #endif
             return value;
+#endif
         }
 
         private Vector2 GetMoveDirection()
@@ -146,34 +161,42 @@ namespace GabrielBertasso
 #if UNITY_ANDROID || UNITY_IOS
         private void UpdateLookRotationDelta(Touch touch)
         {
-            _lookRotationDelta = GetCanvasPosition(touch.deltaPosition);
+            Vector2 position = GetCanvasPosition(touch.screenPosition);
+
+            if (touch.phase == UnityEngine.InputSystem.TouchPhase.Began)
+            {
+                _lastLookTouchCanvasPosition = position;
+            }
+
+            Vector2 input = position - _lastLookTouchCanvasPosition;
+            _lookRotationDelta = new Vector2(-input.y, input.x);
+
+            _lastLookTouchCanvasPosition = position;
         }
 
         private void UpdateMoveDirection(Touch touch)
         {
-            Vector2 direction = GetCanvasPosition(touch.position) - GetCanvasPosition(touch.rawPosition);
-            _moveDirection = direction / _moveMaxRadius;
+            Vector2 direction = GetCanvasPosition(touch.screenPosition) - _touchMoveInitialTransform.anchoredPosition;
+            _moveDirection = direction / _touchMoveCurrentTransformMaxRadius;
 
-            _moveInitialTransform.gameObject.SetActive(true);
-            _moveCurrentTransform.anchoredPosition = Vector2.ClampMagnitude(direction, _moveMaxRadius);
+            _touchMoveCurrentTransform.anchoredPosition = Vector2.ClampMagnitude(direction, _touchMoveCurrentTransformMaxRadius);
         }
 
         private void ResetMoveDirection()
         {
             _moveDirection = default;
-            _moveInitialTransform.gameObject.SetActive(false);
+            _touchMoveCurrentTransform.anchoredPosition = Vector2.zero;
         }
 
-        private bool IsTouchingMoveButton(Touch touch)
+        private bool WasTouchingMoveButton(Touch touch)
         {
-            Vector2 rawPosition = GetCanvasPosition(touch.rawPosition);
-            Vector2 movePosition = GetCanvasPosition(_moveInitialTransform.anchoredPosition);
-            return (rawPosition - movePosition).magnitude <= _moveMaxRadius;
+            Vector2 touchCanvasPosition = GetCanvasPosition(touch.startScreenPosition);
+            return (touchCanvasPosition - _touchMoveInitialTransform.anchoredPosition).magnitude <= _touchMoveCurrentTransformMaxRadius;
         }
 
         private Vector2 GetCanvasPosition(Vector2 screenPosition)
         {
-            return screenPosition / _resolution * _canvasSize;
+            return screenPosition / _screenResolution * _canvasResolution;
         }
 #endif
 
