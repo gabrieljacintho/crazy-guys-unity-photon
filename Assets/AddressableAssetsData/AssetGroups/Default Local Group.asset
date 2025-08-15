@@ -63,6 +63,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33af1a63ceff34047b71b9272b50615c
+    m_Address: Assets/Art/Sprites/Square.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 36e335017ad71d54fbb10842863188ae
     m_Address: Packages/com.unity.render-pipelines.core/Runtime/RenderPipelineResources/FallbackShader.shader
     m_ReadOnly: 0
@@ -110,6 +115,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8eb2aa7699c19aa4d99b072723065739
+    m_Address: Assets/Art/Sprites/Circle.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 901eae5da0650314db37f0d7634d824a
     m_Address: Assets/Art/Fonts/Jersey_10/Jersey10-Regular.ttf
