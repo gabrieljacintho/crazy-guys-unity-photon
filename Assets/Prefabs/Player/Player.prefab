@@ -1201,13 +1201,11 @@ MonoBehaviour:
       RawValue: -1966080
     Y:
       RawValue: 4587520
+  _lookSensitivity:
+    RawValue: 13107
   _lookInput: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _moveInput: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _jumpInput: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _sprintInput: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _touchInput: {fileID: -6074616348035813740, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _touchPositionInput: {fileID: -4765713307742890346, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _touchDeltaInput: {fileID: -8428467253647987025, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _touchInputContent: {fileID: 1138995268950388848}
   _touchMoveInitialTransform: {fileID: 2360177894323021933}
   _touchMoveCurrentTransform: {fileID: 5104746166727725865}

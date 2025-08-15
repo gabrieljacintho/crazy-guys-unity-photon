@@ -67,8 +67,7 @@ namespace Quantum {
   }
   [System.FlagsAttribute()]
   public enum InputButtons : int {
-    Sprint = 1 << 0,
-    Jump = 1 << 1,
+    Jump = 1 << 0,
   }
   public static unsafe partial class FlagsExtensions {
     public static Boolean IsFlagSet(this InputButtons self, InputButtons flag) {
@@ -529,14 +528,12 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Input {
-    public const Int32 SIZE = 56;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(40)]
+    [FieldOffset(32)]
     public FPVector2 MoveDirection;
-    [FieldOffset(24)]
+    [FieldOffset(16)]
     public FPVector2 LookRotation;
-    [FieldOffset(12)]
-    public Button Sprint;
     [FieldOffset(0)]
     public Button Jump;
     public override readonly Int32 GetHashCode() {
@@ -544,7 +541,6 @@ namespace Quantum {
         var hash = 19249;
         hash = hash * 31 + MoveDirection.GetHashCode();
         hash = hash * 31 + LookRotation.GetHashCode();
-        hash = hash * 31 + Sprint.GetHashCode();
         hash = hash * 31 + Jump.GetHashCode();
         return hash;
       }
@@ -554,14 +550,12 @@ namespace Quantum {
     }
     public Boolean IsDown(InputButtons button) {
       switch (button) {
-        case InputButtons.Sprint: return Sprint.IsDown;
         case InputButtons.Jump: return Jump.IsDown;
         default: return false;
       }
     }
     public Boolean WasPressed(InputButtons button) {
       switch (button) {
-        case InputButtons.Sprint: return Sprint.WasPressed;
         case InputButtons.Jump: return Jump.WasPressed;
         default: return false;
       }
@@ -569,7 +563,6 @@ namespace Quantum {
     static partial void SerializeCodeGen(void* ptr, FrameSerializer serializer) {
         var p = (Input*)ptr;
         Button.Serialize(&p->Jump, serializer);
-        Button.Serialize(&p->Sprint, serializer);
         FPVector2.Serialize(&p->LookRotation, serializer);
         FPVector2.Serialize(&p->MoveDirection, serializer);
     }
@@ -804,7 +797,7 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct _globals_ {
-    public const Int32 SIZE = 1512;
+    public const Int32 SIZE = 1384;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public AssetRef<Map> Map;
@@ -828,12 +821,12 @@ namespace Quantum {
     public Int32 PlayerConnectedCount;
     [FieldOffset(608)]
     [FramePrinter.FixedArrayAttribute(typeof(Input), 16)]
-    private fixed Byte _input_[896];
-    [FieldOffset(1504)]
+    private fixed Byte _input_[768];
+    [FieldOffset(1376)]
     public BitSet16 PlayerLastConnectionState;
     public readonly FixedArray<Input> input {
       get {
-        fixed (byte* p = _input_) { return new FixedArray<Input>(p, 56, 16); }
+        fixed (byte* p = _input_) { return new FixedArray<Input>(p, 48, 16); }
       }
     }
     public override readonly Int32 GetHashCode() {
@@ -1232,7 +1225,6 @@ namespace Quantum {
       var i = _globals->input.GetPointer(player);
       i->MoveDirection = input.MoveDirection;
       i->LookRotation = input.LookRotation;
-      i->Sprint = i->Sprint.Update(this.Number, input.Sprint);
       i->Jump = i->Jump.Update(this.Number, input.Jump);
     }
     public Input* GetPlayerInput(PlayerRef player) {
