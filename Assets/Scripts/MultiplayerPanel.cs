@@ -51,12 +51,9 @@ namespace GabrielBertasso
 
         private void Update()
         {
-            if (IsConnected)
+            if (_pauseInput.action.WasPressedThisFrame())
             {
-                if (_pauseInput.action.WasPressedThisFrame())
-                {
-                    TogglePanelVisibility();
-                }
+                TryTogglePanelVisibility();
             }
 
             if (_panelGroup.gameObject.activeSelf)
@@ -261,6 +258,15 @@ namespace GabrielBertasso
         }
 
         #endregion
+
+
+        public void TryTogglePanelVisibility()
+        {
+            if (IsConnected)
+            {
+                _panelGroup.gameObject.SetActive(!_panelGroup.gameObject.activeSelf);
+            }
+        }
 
         private void TogglePanelVisibility()
         {
