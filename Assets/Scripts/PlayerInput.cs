@@ -3,6 +3,9 @@ using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace GabrielBertasso
 {
@@ -50,17 +53,17 @@ namespace GabrielBertasso
 
         private void Update()
         {
-            ResetMoveDirection();
+            ResetInputs();
 
             foreach (var finger in Touch.activeFingers)
             {
                 Touch touch = finger.currentTouch;
-                if (!touch.isInProgress)
+                if (touch.phase != UnityEngine.InputSystem.TouchPhase.Began && touch.phase != UnityEngine.InputSystem.TouchPhase.Moved)
                 {
                     continue;
                 }
 
-                if (WasTouchingMoveButton(touch))
+                if (WasTouchingScreenLeftSide(touch))
                 {
                     UpdateMoveDirection(touch);
                 }
@@ -163,22 +166,39 @@ namespace GabrielBertasso
 
         private void UpdateMoveDirection(Touch touch)
         {
+            if (touch.phase == UnityEngine.InputSystem.TouchPhase.Began)
+            {
+                _touchMoveInitialTransform.anchoredPosition = GetCanvasPosition(touch.screenPosition);
+            }
+
             Vector2 direction = GetCanvasPosition(touch.screenPosition) - _touchMoveInitialTransform.anchoredPosition;
             _moveDirection = direction / _touchMoveCurrentTransformMaxRadius;
 
             _touchMoveCurrentTransform.anchoredPosition = Vector2.ClampMagnitude(direction, _touchMoveCurrentTransformMaxRadius);
+
+            _touchMoveInitialTransform.gameObject.SetActive(true);
+        }
+
+        private void ResetInputs()
+        {
+            ResetLookRotationDelta();
+            ResetMoveDirection();
+        }
+
+        private void ResetLookRotationDelta()
+        {
+            _lookRotationDelta = default;
         }
 
         private void ResetMoveDirection()
         {
             _moveDirection = default;
-            _touchMoveCurrentTransform.anchoredPosition = Vector2.zero;
+            _touchMoveInitialTransform.gameObject.SetActive(false);
         }
 
-        private bool WasTouchingMoveButton(Touch touch)
+        private bool WasTouchingScreenLeftSide(Touch touch)
         {
-            Vector2 touchCanvasPosition = GetCanvasPosition(touch.startScreenPosition);
-            return (touchCanvasPosition - _touchMoveInitialTransform.anchoredPosition).magnitude <= _touchMoveCurrentTransformMaxRadius;
+            return touch.startScreenPosition.x < _screenResolution.x / 2f;
         }
 
         private Vector2 GetCanvasPosition(Vector2 screenPosition)
