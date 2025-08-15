@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 052faaac586de48259a63d0c4782560b
+    m_Address: Assets/Settings/InputSystem_Actions.inputactions
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 086e431e836081046bca4fe38f5a2cac
     m_Address: Assets/QuantumAssets/PlayerKCCSettings.asset
     m_ReadOnly: 0
