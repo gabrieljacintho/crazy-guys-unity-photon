@@ -129,13 +129,11 @@ namespace Quantum.Prototypes {
   public unsafe partial class InputPrototype : StructPrototype {
     public FPVector2 MoveDirection;
     public FPVector2 LookRotation;
-    public Button Sprint;
     public Button Jump;
     partial void MaterializeUser(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context);
     public void Materialize(Frame frame, ref Quantum.Input result, in PrototypeMaterializationContext context = default) {
         result.MoveDirection = this.MoveDirection;
         result.LookRotation = this.LookRotation;
-        result.Sprint = this.Sprint;
         result.Jump = this.Jump;
         MaterializeUser(frame, ref result, in context);
     }

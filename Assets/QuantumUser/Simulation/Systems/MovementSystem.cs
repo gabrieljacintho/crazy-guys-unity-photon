@@ -55,11 +55,6 @@ namespace Quantum.GabrielBertasso
                 kcc->SetLookRotation(nextRotation);
             }
 
-            if (!input->Sprint)
-            {
-                moveDirection *= movement->WalkSpeedMultiplier;
-            }
-
             kcc->SetInputDirection(moveDirection);
 
             if (input->Jump.WasPressed && kcc->IsGrounded)

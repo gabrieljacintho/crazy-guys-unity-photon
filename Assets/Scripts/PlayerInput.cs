@@ -3,9 +3,6 @@ using Photon.Deterministic;
 using Quantum;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.UI;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace GabrielBertasso
 {
@@ -19,7 +16,6 @@ namespace GabrielBertasso
         [SerializeField] private InputActionReference _lookInput;
         [SerializeField] private InputActionReference _moveInput;
         [SerializeField] private InputActionReference _jumpInput;
-        [SerializeField] private InputActionReference _sprintInput;
 #endif
 #if UNITY_ANDROID || UNITY_IOS || UNITY_EDITOR
         [Header("Touch")]
@@ -104,7 +100,6 @@ namespace GabrielBertasso
             _input.LookRotation = ClampLookRotation(_input.LookRotation + GetLookRotationDelta().ToFPVector2());
             _input.MoveDirection = Vector2.ClampMagnitude(GetMoveDirection(), 1f).ToFPVector2();
             _input.Jump = CanJump();
-            _input.Sprint = CanSprint();
         }
 
         #region Inputs
@@ -114,8 +109,9 @@ namespace GabrielBertasso
 #if UNITY_ANDROID || UNITY_IOS
             return _lookRotationDelta * _lookSensitivity.AsFloat;
 #else
-            Vector2 value = new Vector2(-Input.GetAxisRaw(_lookYAxisName), Input.GetAxisRaw(_lookXAxisName)) * _lookSensitivity.AsFloat;
-#if !UNITY_EDITOR
+            Vector2 value = _lookInput.action.ReadValue<Vector2>();
+            value = new Vector2(-value.y, value.x) * _lookSensitivity.AsFloat;
+#if UNITY_WEBGL && !UNITY_EDITOR
             if (Mathf.Abs(value.x) > 45 || Mathf.Abs(value.y) > 45)
             {
                 // Prevent glitch in Chrome with high polling mice where cursor jumps rapidly from time to time
@@ -134,7 +130,7 @@ namespace GabrielBertasso
 #if UNITY_ANDROID || UNITY_IOS
             return _moveDirection;
 #else
-            return new Vector2(Input.GetAxisRaw(_moveXAxisName), Input.GetAxisRaw(_moveYAxisName));
+            return _moveInput.action.ReadValue<Vector2>();
 #endif
         }
 
@@ -143,16 +139,7 @@ namespace GabrielBertasso
 #if UNITY_ANDROID || UNITY_IOS
             return IsJumpButtonPressed;
 #else
-            return Input.GetButton(_jumpButtonName);
-#endif
-        }
-
-        private bool CanSprint()
-        {
-#if UNITY_ANDROID || UNITY_IOS
-            return IsSprintButtonPressed;
-#else
-            return Input.GetButton(_sprintButtonName);
+            return _jumpInput.action.WasPressedThisFrame();
 #endif
         }
 
