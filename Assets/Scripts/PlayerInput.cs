@@ -35,24 +35,45 @@ namespace GabrielBertasso
         private Vector2 _lastLookTouchCanvasPosition;
 
         public bool IsJumpButtonPressed { get; set; }
-        private bool IsSprintButtonPressed { get; set; }
 #endif
         private Quantum.Input _input;
 
         public Vector2 LookRotation => _input.LookRotation.ToUnityVector2();
 
-#if UNITY_ANDROID || UNITY_IOS
-        private void Awake()
+        public override void OnActivate(Frame frame)
         {
+            var playerLink = GetPredictedQuantumComponent<PlayerLink>();
+            if (!Game.PlayerIsLocal(playerLink.PlayerRef))
+            {
+                enabled = false;
+                return;
+            }
+
+            QuantumCallback.Subscribe(this, (CallbackPollInput callback) => PollInput(callback), (DispatchableFilter)null, false, true);
+            QuantumEvent.Subscribe<EventResetLookRotation>(this, OnResetLookRotation, (DispatchableFilter)null, false, true);
+
+#if UNITY_ANDROID || UNITY_IOS
             _touchInputContent.SetActive(true);
             _screenResolution = new Vector2(Screen.width, Screen.height);
             _canvasResolution = _touchInputContent.GetComponentInChildren<CanvasScaler>().referenceResolution;
             _touchMoveCurrentTransformMaxRadius = _touchMoveInitialTransform.rect.width / 2f;
             EnhancedTouchSupport.Enable();
+#endif
         }
 
-        private void Update()
+        public override void OnDeactivate()
         {
+            QuantumCallback.UnsubscribeListener(this);
+        }
+
+        public override void OnUpdateView()
+        {
+            if (!SymbolsHelper.IsInMobilePlatform() && Cursor.lockState != CursorLockMode.Locked)
+            {
+                _input.MoveDirection = default;
+                return;
+            }
+#if UNITY_ANDROID || UNITY_IOS
             ResetInputs();
 
             foreach (var finger in Touch.activeFingers)
@@ -72,34 +93,7 @@ namespace GabrielBertasso
                     UpdateLookRotationDelta(touch);
                 }
             }
-        }
 #endif
-        public override void OnActivate(Frame frame)
-        {
-            var playerLink = GetPredictedQuantumComponent<PlayerLink>();
-            if (!Game.PlayerIsLocal(playerLink.PlayerRef))
-            {
-                enabled = false;
-                return;
-            }
-
-            QuantumCallback.Subscribe(this, (CallbackPollInput callback) => PollInput(callback), (DispatchableFilter)null, false, true);
-            QuantumEvent.Subscribe<EventResetLookRotation>(this, OnResetLookRotation, (DispatchableFilter)null, false, true);
-        }
-
-        public override void OnDeactivate()
-        {
-            QuantumCallback.UnsubscribeListener(this);
-        }
-
-        public override void OnUpdateView()
-        {
-            if (!SymbolsHelper.IsInMobilePlatform() && Cursor.lockState != CursorLockMode.Locked)
-            {
-                _input.MoveDirection = default;
-                return;
-            }
-
             _input.LookRotation = ClampLookRotation(_input.LookRotation + GetLookRotationDelta().ToFPVector2());
             _input.MoveDirection = Vector2.ClampMagnitude(GetMoveDirection(), 1f).ToFPVector2();
             _input.Jump = CanJump();
