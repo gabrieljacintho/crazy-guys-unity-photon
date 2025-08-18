@@ -1,6 +1,6 @@
 # Crazy Guys
 
-Crazy Guys is a multiplayer party royale game developed for Photon Engine study with Unity Engine, C# and Photon Engine (Quantum 3).
+Crazy Guys is a multiplayer party royale game prototype inspired by Stumble Guys, and developed for Photon Engine study with Unity Engine, C# and Photon Engine (Quantum 3).
 
 # Setup
 1. Download [Photon Quantum SDK](https://www.photonengine.com/sdks#quantum)
