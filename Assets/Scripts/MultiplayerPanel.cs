@@ -11,7 +11,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
-using Input = UnityEngine.Input;
 
 namespace GabrielBertasso
 {
@@ -259,12 +258,11 @@ namespace GabrielBertasso
 
         #endregion
 
-
         public void TryTogglePanelVisibility()
         {
             if (IsConnected)
             {
-                _panelGroup.gameObject.SetActive(!_panelGroup.gameObject.activeSelf);
+                TogglePanelVisibility();
             }
         }
 
