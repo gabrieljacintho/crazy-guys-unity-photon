@@ -1,6 +1,13 @@
 # Crazy Guys
-
 Crazy Guys is a cross-platform multiplayer party royale game prototype developed with Unity Engine, C# and Photon Engine (Quantum 3).
+
+[![](https://img.youtube.com/vi/CKLE9N0vOo0/0.jpg)](https://youtu.be/CKLE9N0vOo0)
+![CrazyGuys_PC_Screenshot_01](https://github.com/user-attachments/assets/4ae4607c-7aab-47bf-a05d-50e2db1ae155)
+![CrazyGuys_PC_Screenshot_02](https://github.com/user-attachments/assets/a8e121a9-ad0f-47f5-93c3-a50f28b27536)
+![CrazyGuys_PC_Screenshot_03](https://github.com/user-attachments/assets/cd496755-581d-4b6d-ac77-0f556fff1712)
+![CrazyGuys_PC_Screenshot_04](https://github.com/user-attachments/assets/8cd9c34a-534a-47f5-85bd-69bf14cb36e5)
+![CrazyGuys_PC_Screenshot_05](https://github.com/user-attachments/assets/51bb866b-dc4c-4624-8052-cc4f6c0e658c)
+![CrazyGuys_PC_Screenshot_06](https://github.com/user-attachments/assets/fc2b5951-d8be-4345-af0d-34af9e3ab9bb)
 
 ## 🎮 Controls
 Get ready to dive into the action with these intuitive controls:
