@@ -195,8 +195,8 @@ MonoBehaviour:
   _scene:
     m_AssetGUID: a12c3e260001d094c80e65f1257dc014
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   _pauseInput: {fileID: 8053070235440737313, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _forceLocalMode: 0
@@ -715,7 +715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.8210045, b: 0.90099996, a: 1}
+  m_Color: {r: 0, g: 0.43100688, b: 0.9019608, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v1.1.1
+  m_text: v1.1.2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41591ee84c509c04280d36953a307d4f, type: 2}
   m_sharedMaterial: {fileID: -8938908299413879907, guid: 41591ee84c509c04280d36953a307d4f, type: 2}
