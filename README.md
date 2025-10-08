@@ -1,7 +1,7 @@
 # Crazy Guys
-Crazy Guys is a cross-platform multiplayer party royale game prototype.
+Crazy Guys is a cross-platform multiplayer party royale game prototype for mobile, PC, and web.
 
-Available on [itch.io](https://gabrielbertasso.itch.io/crazy-guys)!
+Available on [App Store](https://apps.apple.com/us/app/crazy-guys/id6752686103) and [itch.io](https://gabrielbertasso.itch.io/crazy-guys)!
 
 ## 🎮 Controls
 Get ready to dive into the action with these intuitive controls:
