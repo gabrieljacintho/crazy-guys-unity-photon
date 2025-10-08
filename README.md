@@ -1,5 +1,5 @@
 # Crazy Guys
-Crazy Guys is a cross-platform multiplayer party royale game prototype developed with Unity Engine, C#, and Photon Engine (Quantum 3).
+Crazy Guys is a cross-platform multiplayer party royale game prototype.
 
 Available on [itch.io](https://gabrielbertasso.itch.io/crazy-guys)!
 
