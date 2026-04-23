@@ -887,6 +887,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6452916438406297640, guid: 18980adafcb814543ba679cb17b7891b, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 127
+      objectReference: {fileID: 0}
     - target: {fileID: 8569860157794874910, guid: 18980adafcb814543ba679cb17b7891b, type: 3}
       propertyPath: m_Pivot.x
       value: 0

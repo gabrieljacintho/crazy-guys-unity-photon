@@ -1,0 +1,18 @@
+{
+    "name": "GabrielBertasso.AtomsAddon.Editor",
+    "rootNamespace": "GabrielBertasso.AtomsAddon.Editor",
+    "references": [
+        "GUID:96c3064115166a7428b13ddf3898c117"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -42,7 +42,7 @@ namespace GabrielBertasso
                 _nicknameText.text = playerData != null ? playerData.PlayerNickname : string.Empty;
             }
 
-            _cameraTransform = Camera.main.transform;
+            _cameraTransform = UnityEngine.Camera.main.transform;
         }
 
         public override void OnDeactivate()

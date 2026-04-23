@@ -1,0 +1,16 @@
+{
+    "name": "GabrielBertasso.DevTool",
+    "rootNamespace": "GabrielBertasso.DevTool",
+    "references": [
+        "GUID:96c3064115166a7428b13ddf3898c117"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

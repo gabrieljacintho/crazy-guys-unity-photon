@@ -15,7 +15,7 @@ namespace GabrielBertasso
         {
             QuantumEvent.Subscribe<EventCoinCollected>(this, OnCoinCollected, (DispatchableFilter)null, false, true);
 
-            _visualRoot.transform.Rotate(0, Random.Range(0f, 360f), 0f, Space.World);
+            _visualRoot.transform.Rotate(0, UnityEngine.Random.Range(0f, 360f), 0f, Space.World);
         }
 
         public override void OnDeactivate()

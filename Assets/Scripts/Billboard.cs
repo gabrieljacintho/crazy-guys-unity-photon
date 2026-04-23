@@ -9,7 +9,7 @@ namespace GabrielBertasso
 
         private void Awake()
         {
-            _cameraTransform = Camera.main.transform;
+            _cameraTransform = UnityEngine.Camera.main.transform;
         }
 
         private void LateUpdate()
