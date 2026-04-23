@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GabrielBertasso.InventorySystem
 {
-    public class InventoryManager : Singleton<InventoryManager>
+    public class InventoryManager : PersistentSingleton<InventoryManager>
     {
         [SerializeField] private bool _isGlobal = true;
         [Tooltip("Set negative to infinity.")]
@@ -30,13 +30,14 @@ namespace GabrielBertasso.InventorySystem
             if (_isGlobal)
             {
                 base.Awake();
-                DontDestroyOnLoad(gameObject);
             }
 
             Initialize();
         }
 
-        public int AddItem(ItemModel item, int quantity = 1)
+        #region Item
+
+        public int AddItem(ItemModel item, int quantity = 1, bool force = false)
         {
             if (!IsInitialized)
             {
@@ -51,25 +52,32 @@ namespace GabrielBertasso.InventorySystem
             }
 
             int remainingQuantity = quantity;
-            List<InventorySlot> slots = _slots.FindAll(s => s.ItemStack.Item == item
+            List<InventorySlot> remainingSlots = _slots.FindAll(s => (s.IsEmpty || s.ItemStack.Item == item)
                 && (s.ItemStack.Item.MaxStackSize < 0 || s.ItemStack.Quantity < s.ItemStack.Item.MaxStackSize));
-            slots = slots.OrderByDescending(x => x.ItemStack.Quantity).ToList();
+            remainingSlots = remainingSlots.OrderByDescending(x => x.ItemStack.Quantity).ToList();
 
             do
             {
                 InventorySlot slot;
                 ItemStack itemStack;
 
-                if (slots.Count > 0)
+                if (remainingSlots.Count > 0)
                 {
-                    slot = slots[0];
+                    slot = remainingSlots[0];
+                    slot.ItemStack ??= new ItemStack(item);
                     itemStack = slot.ItemStack;
-                    slots.Remove(slot);
+                    remainingSlots.Remove(slot);
                 }
                 else if (_maxSlotCount < 0 || _slots.Count < _maxSlotCount)
                 {
-                    itemStack = new ItemStack(item, 0);
-                    _slots.Add(new InventorySlot(itemStack));
+                    itemStack = new ItemStack(item);
+                    slot = CreateSlot(itemStack);
+                }
+                else if (force)
+                {
+                    itemStack = new ItemStack(item);
+                    slot = CreateSlot(itemStack);
+                    Debug.LogWarning($"[InventoryManager] Forcing the creation of a new slot for the item '{item.name}'!", this);
                 }
                 else
                 {
@@ -86,6 +94,11 @@ namespace GabrielBertasso.InventorySystem
             OnItemQuantityChanged?.Invoke(item);
 
             Debug.Log($"[InventoryManager] Item '{item.name}' added to inventory. ({quantity - remainingQuantity})", this);
+
+            if (item.IsEquippable)
+            {
+                TryEquipSlotsMinQuantity(item);
+            }
 
             return quantity - remainingQuantity;
         }
@@ -105,18 +118,18 @@ namespace GabrielBertasso.InventorySystem
             }
 
             int remainingQuantity = quantity;
-            List<InventorySlot> slots = _slots.FindAll(s => s.ItemStack.Item == item);
-            slots = slots.OrderBy(x => x.ItemStack.Quantity).ToList();
+            List<InventorySlot> remainingSlots = _slots.FindAll(s => !s.IsEmpty && s.ItemStack.Item == item);
+            remainingSlots = remainingSlots.OrderBy(x => x.ItemStack.Quantity).ToList();
 
             do
             {
-                if (slots.Count == 0)
+                if (remainingSlots.Count == 0)
                 {
                     Debug.LogWarning($"[InventoryManager] Not enough quantity of item \"{item.name}\" to remove!", this);
                     return quantity - remainingQuantity;
                 }
 
-                InventorySlot slot = slots[0];
+                InventorySlot slot = remainingSlots[0];
                 ItemStack itemStack = slot.ItemStack;
 
                 int quantityToRemove = Mathf.Min(remainingQuantity, itemStack.Quantity);
@@ -125,8 +138,8 @@ namespace GabrielBertasso.InventorySystem
 
                 if (itemStack.IsEmpty)
                 {
-                    _slots.Remove(slot);
-                    slots.Remove(slot);
+                    RemoveSlot(slot);
+                    remainingSlots.Remove(slot);
                 }
             }
             while (remainingQuantity > 0);
@@ -134,6 +147,11 @@ namespace GabrielBertasso.InventorySystem
             OnItemQuantityChanged?.Invoke(item);
 
             Debug.Log($"[InventoryManager] Item '{item.name}' removed from inventory. ({quantity - remainingQuantity})", this);
+
+            if (item.IsEquippable)
+            {
+                TryEquipSlotsMinQuantity(item);
+            }
 
             return quantity - remainingQuantity;
         }
@@ -180,11 +198,11 @@ namespace GabrielBertasso.InventorySystem
 
             int quantity = 0;
 
-            foreach (var itemStack in _slots)
+            foreach (var slot in _slots)
             {
-                if (itemStack.ItemStack.Item == item)
+                if (!slot.IsEmpty && slot.ItemStack.Item == item)
                 {
-                    quantity += itemStack.ItemStack.Quantity;
+                    quantity += slot.ItemStack.Quantity;
                 }
             }
 
@@ -217,33 +235,62 @@ namespace GabrielBertasso.InventorySystem
             return slotEmptySpace + (emptySlotsCount * item.MaxStackSize);
         }
 
+        #endregion
+
+        #region Equip
+
         public bool TryEquipItem(ItemModel item)
         {
-            InventorySlot slot = _slots.Find(s => s.ItemStack.Item == item);
+            InventorySlot slot = _slots.Find(s => s.Item == item);
             if (slot == null)
             {
-                Debug.LogWarning($"[InventoryManager] No \"{item.name}\" item in the inventory!", this);
+                Debug.LogWarning($"[InventoryManager] Unable to equip the '{item.name}' item: No item in inventory!", this);
                 return false;
             }
 
-            if (!slot.ItemStack.Item.IsEquipable)
+            if (!slot.ItemStack.Item.IsEquippable)
             {
-                Debug.LogWarning($"Item \"{item.name}\" cannot be equipped!", this);
+                Debug.LogWarning($"[InventoryManager] Unable to equip the '{item.name}' item: Item is not equippable!", this);
                 return false;
             }
 
-            if (item.MaxEquippedItemsInCategory >= 0)
+            if (!CanBeEquipped(item))
             {
-                int equippedCount = _slots.FindAll(x => x.IsEquipped && x.ItemStack.Item == item).Count;
-                if (equippedCount > item.MaxEquippedItemsInCategory)
+                TryUnequipLastEquippedItemInCategory(item);
+                if (!CanBeEquipped(item))
                 {
-                    TryUnequipLastEquippedItemInCategory(item);
+                    Debug.LogWarning($"[InventoryManager] Unable to equip the '{item.name}' item: Maximum number of equipped slots in the equipment category reached!", this);
+                    return false;
                 }
             }
 
-            slot.IsEquipped = true;
+            EquipSlot(slot);
 
-            Debug.Log($"[InventoryManager] Slot with item '{item.name}' was equipped.", this);
+            return true;
+        }
+
+        private bool TryEquipSlotsMinQuantity(ItemModel item)
+        {
+            int remainingQuantity = item.MinEquippedSlotsInCategory - GetEquippedSlotsCount(item.EquipmentCategory);
+            if (remainingQuantity <= 0)
+            {
+                return true;
+            }
+
+            List<InventorySlot> remainingSlots = _slots.FindAll(x => !x.IsEmpty && !x.IsEquipped && x.Item.EquipmentCategory == item.EquipmentCategory);
+            for (int i = 0; i < remainingQuantity; i++)
+            {
+                if (remainingSlots.Count == 0)
+                {
+                    Debug.LogWarning($"[InventoryManager] Item '{item.name}' has fewer equipped slots ({GetEquippedSlotsCount(item.EquipmentCategory)}) than the minimum number of equipped slots in the category ({item.MinEquippedSlotsInCategory})!", this);
+                    return false;
+                }
+
+                InventorySlot slot = remainingSlots[0];
+                remainingSlots.Remove(slot);
+
+                EquipSlot(slot);
+            }
 
             return true;
         }
@@ -257,12 +304,12 @@ namespace GabrielBertasso.InventorySystem
             }
             else
             {
-                slot = _slots.FindLast(x => x.IsEquipped && x.ItemStack.Item.Id == item.Id);
+                slot = _slots.FindLast(x => !x.IsEmpty && x.IsEquipped && x.Item.EquipmentCategory == item.EquipmentCategory);
             }
 
             if (slot != null)
             {
-                UnequipItem(slot);
+                UnequipSlot(slot);
                 return true;
             }
 
@@ -271,23 +318,22 @@ namespace GabrielBertasso.InventorySystem
 
         public bool TryUnequipItem(ItemModel item)
         {
-            InventorySlot slot = _slots.Find(s => s.ItemStack.Item == item);
+            InventorySlot slot = _slots.Find(s => s.Item == item);
             if (slot == null)
             {
-                Debug.LogWarning($"[InventoryManager] No '{item.name}' item in the inventory!", this);
+                Debug.LogWarning($"[InventoryManager] Unable to unequip the '{item.name}' item: No item in inventory!", this);
                 return false;
             }
 
-            UnequipItem(slot);
+            if (GetEquippedSlotsCount(item.EquipmentCategory) <= item.MinEquippedSlotsInCategory)
+            {
+                Debug.LogWarning($"[InventoryManager] Unable to unequip the '{item.name}' item: Minimum number of equipped slots in the equipment category reached!");
+                return false;
+            }
+
+            UnequipSlot(slot);
 
             return true;
-        }
-
-        private void UnequipItem(InventorySlot slot)
-        {
-            slot.IsEquipped = false;
-
-            Debug.Log($"[InventoryManager] Slot with item '{slot.ItemStack.Item.name}' was unequipped.", this);
         }
 
         public bool TryToggleEquipItem(ItemModel item)
@@ -295,13 +341,13 @@ namespace GabrielBertasso.InventorySystem
             InventorySlot slot = _slots.Find(s => s.ItemStack.Item == item);
             if (slot == null)
             {
-                Debug.LogWarning($"[InventoryManager] No '{item.name}' item in the inventory!", this);
+                Debug.LogWarning($"[InventoryManager] No '{item.name}' item in inventory!", this);
                 return false;
             }
 
             if (slot.IsEquipped)
             {
-                UnequipItem(slot);
+                UnequipSlot(slot);
                 return true;
             }
             else
@@ -314,6 +360,54 @@ namespace GabrielBertasso.InventorySystem
         {
             return _slots.Exists(x => x.IsEquipped && x.ItemStack.Item == item);
         }
+
+        public bool CanBeEquipped(ItemModel item)
+        {
+            return item.IsEquippable && (item.MaxEquippedSlotsInCategory < 0 || GetEquippedSlotsCount(item.EquipmentCategory) < item.MaxEquippedSlotsInCategory);
+        }
+
+        public bool CanBeUnequipped(ItemModel item)
+        {
+            return IsEquipped(item) && GetEquippedSlotsCount(item.EquipmentCategory) > item.MinEquippedSlotsInCategory;
+        }
+
+        public int GetEquippedSlotsCount(string equipmentCategory)
+        {
+            return _slots.FindAll(x => !x.IsEmpty && x.IsEquipped && x.Item.EquipmentCategory == equipmentCategory).Count;
+        }
+
+        #endregion
+
+        #region Slot
+
+        private void EquipSlot(InventorySlot slot)
+        {
+            slot.IsEquipped = true;
+
+            Debug.Log($"[InventoryManager] Slot with item '{slot.Item.name}' was equipped.", this);
+        }
+
+        private void UnequipSlot(InventorySlot slot)
+        {
+            slot.IsEquipped = false;
+
+            Debug.Log($"[InventoryManager] Slot with item '{slot.Item.name}' was unequipped.", this);
+        }
+
+        private InventorySlot CreateSlot(ItemStack itemStack = null)
+        {
+            InventorySlot slot = new InventorySlot(itemStack);
+            _slots.Add(slot);
+
+            return slot;
+        }
+
+        private bool RemoveSlot(InventorySlot slot)
+        {
+            return _slots.Remove(slot);
+        }
+
+        #endregion
 
         private void Initialize()
         {

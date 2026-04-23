@@ -8,21 +8,33 @@ namespace GabrielBertasso.ShopSystem
     [CreateAssetMenu(fileName = "Product", menuName = "Gabriel Bertasso/Product")]
     public class ProductModel : ScriptableObject
     {
-        public ItemModel Item;
+        [SerializeField] private ItemModel _item;
         [Min(1)]
-        public int Quantity = 1;
-        public ProductType Type;
-        public string Category;
-        public bool IsIAP;
+        [SerializeField] private int _quantity = 1;
+        [SerializeField] private ProductType _type;
+        [SerializeField] private string _category;
+        [SerializeField] private bool _isIAP;
         [ShowIf(nameof(IsIAP)), ReadOnly]
-        public Product IAPProduct;
+        [SerializeField] private Product _iapProduct;
         [HideIf(nameof(IsIAP))]
-        public ItemModel PurchaseCurrency;
+        [SerializeField] private ItemModel _purchaseCurrency;
         [HideIf(nameof(IsIAP))]
-        public int PriceInCurrency;
-        [ReadOnly] public int PurchasedQuantity;
-        [ReadOnly] public ShopManager Shop;
-        [ReadOnly] public InventoryManager Inventory;
+        [SerializeField] private int priceInCurrency = 10;
+        [ShowInInspector, ReadOnly] private int _purchasedQuantity;
+        [ShowInInspector, ReadOnly] private ShopManager _shop;
+        [ShowInInspector, ReadOnly] private InventoryManager _inventory;
+
+        public ItemModel Item => _item;
+        public int Quantity => _quantity;
+        public ProductType Type => _type;
+        public string Category => _category;
+        public bool IsIAP => _isIAP;
+        public Product IAPProduct { get => _iapProduct; set => _iapProduct = value; }
+        public ItemModel PurchaseCurrency => _purchaseCurrency;
+        public int PriceInCurrency => priceInCurrency;
+        public int PurchasedQuantity { get => _purchasedQuantity; set => _purchasedQuantity = value; }
+        public ShopManager Shop { get => _shop; set => _shop = value; }
+        public InventoryManager Inventory { get => _inventory; set => _inventory = value; }
 
         public string Id => Item != null ? Item.Id : string.Empty;
         public string Title => IsIAP ? IAPProduct?.metadata?.localizedTitle : (Item != null ? Item.Name : string.Empty);
@@ -33,7 +45,7 @@ namespace GabrielBertasso.ShopSystem
         public bool IsAvailable => !IsIAP || (IAPProduct != null && IAPProduct.availableToPurchase);
         public bool IsPurchased => PurchasedQuantity > 0;
         public bool IsEntitled => IsPurchased && (Type == ProductType.NonConsumable || Type == ProductType.Subscription);
-
+        public bool IsEquippable => IsAvailable && IsPurchased && Inventory != null && Item != null && Item.IsEquippable;
 
         public bool CanBePurchased()
         {
@@ -54,7 +66,12 @@ namespace GabrielBertasso.ShopSystem
 
         public bool CanBeEquipped()
         {
-            return IsAvailable && IsPurchased && Item != null && Item.IsEquipable;
+            return IsEquippable && Inventory.CanBeEquipped(Item);
+        }
+
+        public bool CanBeUnequipped()
+        {
+            return IsEquippable && Inventory.CanBeUnequipped(Item);
         }
 
         public static implicit operator string(ProductModel model)

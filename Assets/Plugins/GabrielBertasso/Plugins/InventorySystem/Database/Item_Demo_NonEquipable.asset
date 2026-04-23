@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b03ad7e52f0548e4188d0abd866108a6, type: 3}
+  m_Name: Item_Demo_NonEquipable
+  m_EditorClassIdentifier: GabrielBertasso.InventorySystem::GabrielBertasso.InventorySystem.ItemModel
+  _id: 7bb3f57a-436f-481c-8969-34dc8528bd02
+  _name: Non-Equippable Demo Item
+  _description: Demonstration of a non-equippable item.
+  _icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  _viewPrefab: {fileID: 0}
+  _gamePrefab: {fileID: 0}
+  _maxStackSize: 1
+  _isEquippable: 0
+  _equipmentCategory: 
+  _minEquippedSlotsInCategory: 0
+  _maxEquippedSlotsInCategory: 1

@@ -11,7 +11,7 @@ namespace GabrielBertasso.InventorySystem
         public bool IsEmpty => Item == null || Quantity <= 0;
         public bool IsFull => Item != null && Item.MaxStackSize >= 0 && Quantity >= Item.MaxStackSize;
 
-        public ItemStack(ItemModel item, int quantity)
+        public ItemStack(ItemModel item, int quantity = 0)
         {
             Item = item;
             Quantity = quantity;

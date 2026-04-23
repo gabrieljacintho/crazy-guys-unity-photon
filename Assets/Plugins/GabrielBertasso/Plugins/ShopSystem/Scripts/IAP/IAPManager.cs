@@ -9,7 +9,7 @@ using UnityEngine.Purchasing;
 
 namespace GabrielBertasso.ShopSystem.IAP
 {
-    public class IAPManager : Singleton<IAPManager>
+    public class IAPManager : PersistentSingleton<IAPManager>
     {
         public static bool IsInitialized { get; private set; }
 
@@ -25,8 +25,6 @@ namespace GabrielBertasso.ShopSystem.IAP
         protected override async void Awake()
         {
             base.Awake();
-
-            DontDestroyOnLoad(gameObject);
 
             if (ShopManager.Instance.IsInitialized)
             {

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3982720521090478739}
   - component: {fileID: 5486966491698730855}
   - component: {fileID: 7263377745172713651}
-  - component: {fileID: 7083480559565316232}
+  - component: {fileID: 3805544827083691889}
   m_Layer: 5
   m_Name: IAPView
   m_TagString: Untagged
@@ -103,8 +103,8 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &7083480559565316232
+    m_Bits: 127
+--- !u!114 &3805544827083691889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,32 +113,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5836334103407574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e03063953a22344f8f9da7fd9fda940, type: 3}
+  m_Script: {fileID: 11500000, guid: 802e01fc7ff81d54b9324b7d4e4ecd67, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GabrielBertasso.IAP.IAPView
-  _productViewPrefab: {fileID: 5078149319251075281, guid: fd20e0c5311a40c4aa729ef34b93a7e0, type: 3}
-  _productViewParent: {fileID: 6115632971245720387}
-  OnInitialized:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8496766175885079972}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPurchaseFailed:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPurchaseDeferred:
-    m_PersistentCalls:
-      m_Calls: []
+  m_EditorClassIdentifier: GabrielBertasso.ShopSystem::GabrielBertasso.ShopSystem.ShopManager
+  _isGlobal: 1
+  _autoEquipItemOnPurchase: 1
+  _inventory: {fileID: 0}
+  _products:
+  - {fileID: 11400000, guid: e978468c3bc41784887c0b63d4488e1e, type: 2}
+  - {fileID: 11400000, guid: 9f3de5f3eb0b03742ab8c7ec01b93b7a, type: 2}
+  - {fileID: 11400000, guid: 961487e665a313e42a60546fbbae36ea, type: 2}
+  - {fileID: 11400000, guid: 3d5896676ebf30945ae3857e6afcaadd, type: 2}
 --- !u!1 &224474863883603372
 GameObject:
   m_ObjectHideFlags: 0

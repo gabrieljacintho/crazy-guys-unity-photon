@@ -8,7 +8,7 @@ using UnityEngine.Purchasing;
 
 namespace GabrielBertasso.ShopSystem
 {
-    public class ShopManager : Singleton<ShopManager>
+    public class ShopManager : PersistentSingleton<ShopManager>
     {
         [SerializeField] private bool _isGlobal = true;
         [SerializeField] private bool _autoEquipItemOnPurchase = true;
@@ -28,8 +28,6 @@ namespace GabrielBertasso.ShopSystem
             if (_isGlobal)
             {
                 base.Awake();
-                DontDestroyOnLoad(gameObject);
-                return;
             }
 
             if (_inventory == null)
@@ -106,10 +104,10 @@ namespace GabrielBertasso.ShopSystem
             }
 
             int quantityToAdd = product.Quantity * quantity;
-            int quantityAdded = _inventory.AddItem(product.Item, quantityToAdd);
+            int quantityAdded = _inventory.AddItem(product.Item, quantityToAdd, product.IsIAP);
             if (quantityAdded != quantityToAdd)
             {
-                Debug.LogError($"[ShopManager] Quantity to be added ({quantityToAdd}) does not match quantity added ({quantityAdded})!", this);
+                Debug.LogError($"[ShopManager] Quantity to be added ({quantityToAdd}) does not match _quantity added ({quantityAdded})!", this);
             }
 
             product.PurchasedQuantity += quantity;

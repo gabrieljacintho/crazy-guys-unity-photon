@@ -14,10 +14,10 @@ namespace GabrielBertasso.ShopSystem
         [Header("Purchase Button")]
         [SerializeField] private Button _purchaseButton;
         [SerializeField] private Image _purchaseButtonImage;
-        [SerializeField] private Color _defaultPurchaseColor = Color.green;
-        [SerializeField] private Color _purchasedPurchaseColor = Color.blue;
+        [SerializeField] private Color _purchaseColor = Color.green;
+        [SerializeField] private Color _purchasedColor = Color.blue;
         [SerializeField] private Color _unavailablePurchaseColor = Color.gray;
-        [SerializeField] private Color _noSpaceAvailableInInventoryPurchaseColor = Color.gray;
+        [SerializeField] private Color _noSpaceAvailableInInventoryColor = Color.gray;
         [SerializeField] private TMP_Text _purchaseButtonText;
         [SerializeField] private string _purchasedText = "Purchased";
         [SerializeField] private string _unavailableText = "Unavailable";
@@ -26,11 +26,15 @@ namespace GabrielBertasso.ShopSystem
         [Header("Equip Button")]
         [SerializeField] private Button _equipButton;
         [SerializeField] private Image _equipButtonImage;
-        [SerializeField] private Color _equipEquipColor = Color.green;
-        [SerializeField] private Color _unequipEquipColor = Color.blue;
+        [SerializeField] private Color _equipColor = Color.green;
+        [SerializeField] private Color _equippedColor = Color.blue;
+        [SerializeField] private Color _unequipColor = Color.yellow;
+        [SerializeField] private Color _unequippedColor = Color.blue;
         [SerializeField] private TMP_Text _equipButtonText;
         [SerializeField] private string _equipText = "Equip";
+        [SerializeField] private string _equippedText = "Equipped";
         [SerializeField] private string _unequipText = "Unequip";
+        [SerializeField] private string _unequippedText = "Unequipped";
 
         [ShowInInspector, ReadOnly] private ProductModel _model;
 
@@ -84,14 +88,16 @@ namespace GabrielBertasso.ShopSystem
 
         private void UpdateEquipButton()
         {
+            bool isEquipped = _model.Inventory.IsEquipped(_model.Item);
+            bool canToggleEquip = isEquipped ? _model.CanBeUnequipped() : _model.CanBeEquipped();
+
             if (_equipButton != null)
             {
-                _equipButton.gameObject.SetActive(_model.CanBeEquipped());
-                _equipButton.interactable = true;
+                _equipButton.gameObject.SetActive(_model.IsEquippable);
+                _equipButton.interactable = canToggleEquip;
             }
 
             bool isEquipButtonActive = _equipButton != null && _equipButton.gameObject.activeInHierarchy;
-            bool isEquipped = _model.Inventory.IsEquipped(_model.Item);
 
             if (_equipButtonImage != null)
             {
@@ -99,11 +105,11 @@ namespace GabrielBertasso.ShopSystem
 
                 if (isEquipped)
                 {
-                    _equipButtonImage.color = _unequipEquipColor;
+                    _equipButtonImage.color = canToggleEquip ? _unequipColor : _equippedColor;
                 }
                 else
                 {
-                    _equipButtonImage.color = _equipEquipColor;
+                    _equipButtonImage.color = canToggleEquip ? _equipColor : _unequipColor;
                 }
             }
 
@@ -113,11 +119,11 @@ namespace GabrielBertasso.ShopSystem
 
                 if (isEquipped)
                 {
-                    _equipButtonText.text = _unequipText;
+                    _equipButtonText.text = canToggleEquip ? _unequipText : _equippedText;
                 }
                 else
                 {
-                    _equipButtonText.text = _equipText;
+                    _equipButtonText.text = canToggleEquip ? _equipText : _unequippedText;
                 }
             }
         }
@@ -145,15 +151,15 @@ namespace GabrielBertasso.ShopSystem
                 }
                 else if (_model.IsEntitled)
                 {
-                    _purchaseButtonImage.color = _purchasedPurchaseColor;
+                    _purchaseButtonImage.color = _purchasedColor;
                 }
                 else if (!hasAvailableSpaceInInventory)
                 {
-                    _purchaseButtonImage.color = _noSpaceAvailableInInventoryPurchaseColor;
+                    _purchaseButtonImage.color = _noSpaceAvailableInInventoryColor;
                 }
                 else
                 {
-                    _purchaseButtonImage.color = _defaultPurchaseColor;
+                    _purchaseButtonImage.color = _purchaseColor;
                 }
             }
 

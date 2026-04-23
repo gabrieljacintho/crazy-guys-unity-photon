@@ -14,6 +14,8 @@ namespace GabrielBertasso.InventorySystem
         [SerializeField] private TMP_Text _descriptionText;
         [SerializeField] private TMP_Text _quantityText;
         [SerializeField] private Image _iconImage;
+
+        [Header("Instantiate")]
         [SerializeField] private bool _canInstantiatePrefab;
         [ShowIf(nameof(_canInstantiatePrefab))]
         [SerializeField] private Transform _instanceParent;
