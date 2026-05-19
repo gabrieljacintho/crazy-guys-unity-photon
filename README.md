@@ -6,10 +6,10 @@ Self-published on [App Store](https://apps.apple.com/us/app/crazy-guys/id6752686
 ## 🎮 Controls
 Get ready to dive into the action with these intuitive controls:
 
-* Movement: Use W, A, S, D keys to navigate your character through the game world.
-* Jump: Press Space to leap over obstacles or reach higher platforms.
-* Look Around: Move your mouse to look around the environment.
-* Game Menu: Press Esc to open the game menu during play.
+* **Movement:** Use W, A, S, D keys to navigate your character through the game world.
+* **Jump:** Press Space to leap over obstacles or reach higher platforms.
+* **Look Around:** Move your mouse to look around the environment.
+* **Game Menu:** Press Esc to open the game menu during play.
 
 ## Video
 [![](https://img.youtube.com/vi/CKLE9N0vOo0/0.jpg)](https://youtu.be/CKLE9N0vOo0)
