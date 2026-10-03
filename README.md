@@ -12,7 +12,7 @@ Get ready to dive into the action with these intuitive controls:
 * **Game Menu:** Press Esc to open the game menu during play.
 
 ## Video
-[![](https://img.youtube.com/vi/CKLE9N0vOo0/0.jpg)](https://youtu.be/CKLE9N0vOo0)
+https://github.com/user-attachments/assets/ba941df7-ee19-4fd5-acc3-84ee5a13b229
 
 ## Screenshots
 ![CrazyGuys_PC_Screenshot_01](https://github.com/user-attachments/assets/4ae4607c-7aab-47bf-a05d-50e2db1ae155)
